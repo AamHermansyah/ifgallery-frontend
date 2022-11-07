@@ -27,7 +27,7 @@ function CreatePin() {
   const {user} = session;
 
   const handleGDImageId = (link) => {
-    const regex = /(d\/[\w|\d]+\/)/gi;
+    const regex = /(d\/[\w|\d|\-\_]+\/)/gi;
     if(regex.test(link)){
       const google_drive_image_id = link.match(regex)[0].replace(/d\/|\//gi, '')
 
@@ -89,8 +89,8 @@ function CreatePin() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center mt-5 lg:h-4/5 pb-4">
-      <div className="flex lg:flex-row flex-col justify-center items-center bg-white lg:p-5 p-3 lg:w-4/5 w-full">
+    <div className="flex flex-col justify-center items-center mt-5 lg:h-4/5">
+      <div className="flex lg:flex-row flex-col justify-center items-center bg-white lg:p-5 p-3 pb-6 lg:w-4/5 w-full">
         <div className="bg-secondaryColor p-3 flex flex-0.7 w-full">
           <div className="relative flex justify-center items-center flex-col border-2 border-dotted border-gray-300 p-3 w-full h-[300px] sm:h-420">
             {cekImageStatus && (
