@@ -69,63 +69,105 @@ export const feedQuery = `*[_type == 'pin'] | order(_createAt desc) {
 }`
 
 export const pinDetailQuery = (pinId) => {
-    const query = `*[_type == "pin" && _id == '${pinId}']{
-      image_url,
+  const query = `*[_type == "pin" && _id == '${pinId}']{
+    image_url,
+    _id,
+    _createdAt,
+    title, 
+    about,
+    category,
+    destination,
+    posted_by -> {
       _id,
-      _createdAt,
-      title, 
-      about,
-      category,
-      destination,
+      username,
+      image_url
+    },
+    save[] {
+        _key,
       posted_by -> {
         _id,
         username,
         image_url
       },
-     save[] {
-         _key,
-        posted_by -> {
-          _id,
-          username,
-          image_url
-        },
-      },
-      comments[] {
-        comment,
-        create_at,
-        _key,
-        posted_by->{
-          _id,
-          username,
-          image_url,
-        },
-      }
-    }`;
-    return query;
-  };
-  
-  export const pinDetailMorePinQuery = (pin) => {
-    const query = `*[_type == "pin" && category == '${pin.category}' && _id != '${pin._id}' ]{
-      image_url,
-      _id,
-      destination,
-      posted_by -> {
+    },
+    comments[] {
+      comment,
+      create_at,
+      _key,
+      posted_by->{
         _id,
         username,
-        image_url
+        image_url,
       },
-      save[] {
-        _key,
-        posted_by -> {
-          _id,
-          username,
-          image_url
-        },
-      },
-    }`;
+    }
+  }`;
+  return query;
+};
 
-    return query;
-  };
+export const pinDetailMorePinQuery = (pin) => {
+  const query = `*[_type == "pin" && category == '${pin.category}' && _id != '${pin._id}' ]{
+    image_url,
+    _id,
+    destination,
+    posted_by -> {
+      _id,
+      username,
+      image_url
+    },
+    save[] {
+      _key,
+      posted_by -> {
+        _id,
+        username,
+        image_url
+      },
+    },
+  }`;
+
+  return query;
+};
+
+export const userCreatedPinsQuery = (userId) => {
+  const query = `*[ _type == 'pin' && user_id == '${userId}'] | order(_createdAt desc){
+    image_url,
+    _id,
+    destination,
+    posted_by -> {
+      _id,
+      username,
+      image_url
+    },
+    save[]{
+      posted_by -> {
+        _id,
+        username,
+        image_url
+      },
+    },
+  }`;
+  return query;
+};
+
+export const userSavedPinsQuery = (userId) => {
+  const query = `*[_type == 'pin' && '${userId}' in save[].user_id ] | order(_createdAt desc) {
+    image_url,
+    _id,
+    destination,
+    posted_by -> {
+      _id,
+      username,
+      image_url
+    },
+    save[]{
+      posted_by -> {
+        _id,
+        username,
+        image_url
+      },
+    },
+  }`;
+  return query;
+};
 
 export const categories = [
     {

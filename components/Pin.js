@@ -12,6 +12,7 @@ import { truncateName } from '../utils/truncateString'
 import { useDispatch, useSelector } from 'react-redux'
 import { deletePin, replacePin } from '../app/features/pins/pinsSlice'
 import { deletePinQuery, unsaveQuery } from '../utils/data'
+import { url } from '../utils/config'
 
 function Pin({pin, onDelete}) {
     const [imageSize, setSmageSize] = useState({
@@ -188,7 +189,7 @@ function Pin({pin, onDelete}) {
                     </div>
                 </div>
             </div>
-            <Link href={`user-profile/${pin?.posted_by._id}`} className="flex items-center mt-2 gap-2 mb-4">
+            <Link href={`${url}/profile/${pin?.posted_by._id}`} className="flex items-center mt-2 gap-2 mb-4">
                 <div className="flex bg-gradient-to-tr from-pink-500 to-blue-600 p-0.5 items-center justify-center w-8 h-8 relative rounded-full">
                     <div className="relative w-full h-full overflow-hidden rounded-full">
                         <Image src={`/api/imageproxy?url=${encodeURIComponent(pin?.posted_by.image_url)}`} alt="my-profile" layout="fill" objectFit="cover" />

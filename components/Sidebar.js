@@ -6,6 +6,7 @@ import { NavigationContextApp } from '../context/navigationContext'
 import { categories } from '../utils/data'
 import { truncateName } from '../utils/truncateString'
 import { useRouter } from 'next/router';
+import { url } from '../utils/config'
 
 function Sidebar({user}) {
   const {navigationActive, setNavigationActive} = useContext(NavigationContextApp);
@@ -40,7 +41,7 @@ function Sidebar({user}) {
             <h3 className="px-5 text-base 2xl:text-xl">Discover Categories</h3>
             {categories.map((category, index) => (
                 <Link 
-                href={`${process.env.URL}/?categoryId=${category.name}`}
+                href={`${url}/?categoryId=${category.name}`}
                 className={`${navigationActive === category.name ? isActive : isNotActive} flex items-center px-5 gap-3 transition-all duration-200 capitalize`}
                 key={index}>
                   {category.icon}
@@ -50,7 +51,7 @@ function Sidebar({user}) {
           </div>
         </div>
         {user && (
-          <Link href={`${process.env.URL}/profile/${user.userId}`} className="p-2 m-2 flex items-center">
+          <Link href={`${url}/profile/${user.userId}`} className="p-2 m-2 flex items-center">
             <div className="bg-gradient-to-tr from-pink-500 to-blue-600 p-0.5 flex items-center justify-center w-10 h-10 relative rounded-full">
               <div className="relative w-full h-full overflow-hidden rounded-full">
                   <Image src={`/api/imageproxy?url=${encodeURIComponent(user.image)}`} alt="my-profile" layout="fill" objectFit="cover" />

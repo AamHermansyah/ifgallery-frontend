@@ -16,10 +16,12 @@ import { AiOutlineLoading3Quarters, AiTwotoneHeart } from 'react-icons/ai';
 import { useSession } from 'next-auth/react';
 import MasonryLayout from '../../components/MasonryLayout';
 import { getDateWithDayName, getHoursAndMinutes } from '../../utils/formatDate';
+import { useDispatch, useSelector } from 'react-redux';
+import { addPins } from '../../app/features/pins/pinsSlice';
+import Head from 'next/head';
 
 function PinDetail() {
   const [acpectImageType, setAcpectImageType] = useState('square');
-  const [pins, setPins] = useState(null);
   const [pinDetail, setPinDetail] = useState(null);
   const [comment, setComment] = useState('');
   const [addingComment, setAddingComment] = useState(false);
@@ -41,6 +43,10 @@ function PinDetail() {
   const { data: session } = useSession();
   const user = session?.user;
 
+  // redux
+  const dispatch = useDispatch();
+  const pins = useSelector(state => state.pins);
+
   const fetchPinDetail = () => {
     let queryFetch = pinDetailQuery(id);
     if(queryFetch){
@@ -54,7 +60,7 @@ function PinDetail() {
           client
           .fetch(queryFetch)
           .then(res => {
-            setPins(res);
+            dispatch(addPins(res));
           })
         } 
         else router.push('/404');
@@ -228,44 +234,52 @@ function PinDetail() {
   return (
     <Navigation>
       <Pins>
+        {!loading && (
+          <Head>
+            <title>{pinDetail.title} | {pinDetail.posted_by.username}</title>
+            <meta name="description" content={pinDetail.about} />
+            <meta name="author" content={pinDetail.posted_by.username} />
+          </Head>
+        )}
+
         {loading && (
           <div className="p-4">
             <Spinner message="Sabar ya ini masih loading..." />
           </div>
         )}
 
-      {alertDeleteDisplay && (
-        <div id="alert-delete" className="fixed inset-0 flex items-center justify-center z-[100] bg-white bg-opacity-70 backdrop-blur-sm">
-          <div className="shadow-lg rounded-2xl p-4 bg-white w-64 sm:w-[300px] m-auto">
-            <div className="w-full h-full text-center my-3">
-              <div className="flex h-full flex-col justify-between">
-                <MdOutlineAutoDelete fontSize={60} className="mx-auto" />
-                <p className="text-gray-800 text-xl font-bold mt-4">Hapus roasting ehh posting</p>
-                <p className="text-gray-600 text-base py-2 px-6">Kamu nanya?... Ingin menghapus?</p>
-                <div className="flex items-center justify-between gap-4 w-full mt-6">
-                  <button 
-                  onClick={() => handleDeleteComment(idCommentForDelete)}
-                  type="button"
-                  disabled={deletingPost}
-                  className="py-2 px-4  bg-indigo-600 hover:bg-indigo-700 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md outline-none  rounded-lg ">
-                    {deletingPost ? <AiOutlineLoading3Quarters fontSize={24} className="mx-auto animate-spin"/> : 'Delete'}
-                  </button>
-                  <button 
-                  onClick={() => {
-                    setIdCommentForDelete(null);
-                    setAlertDeleteDisplay(false);
-                  }}
-                  type="button" 
-                  disabled={deletingPost}
-                  className="py-2 px-4  bg-red-500 hover:bg-red-600 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md outline-none rounded-lg ">
-                    Cancel
-                  </button>
+        {alertDeleteDisplay && (
+          <div id="alert-delete" className="fixed inset-0 flex items-center justify-center z-[100] bg-white bg-opacity-70 backdrop-blur-sm">
+            <div className="shadow-lg rounded-2xl p-4 bg-white w-64 sm:w-[300px] m-auto">
+              <div className="w-full h-full text-center my-3">
+                <div className="flex h-full flex-col justify-between">
+                  <MdOutlineAutoDelete fontSize={60} className="mx-auto" />
+                  <p className="text-gray-800 text-xl font-bold mt-4">Hapus roasting ehh posting</p>
+                  <p className="text-gray-600 text-base py-2 px-6">Kamu nanya?... Ingin menghapus?</p>
+                  <div className="flex items-center justify-between gap-4 w-full mt-6">
+                    <button 
+                    onClick={() => handleDeleteComment(idCommentForDelete)}
+                    type="button"
+                    disabled={deletingPost}
+                    className="py-2 px-4  bg-indigo-600 hover:bg-indigo-700 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md outline-none  rounded-lg ">
+                      {deletingPost ? <AiOutlineLoading3Quarters fontSize={24} className="mx-auto animate-spin"/> : 'Delete'}
+                    </button>
+                    <button 
+                    onClick={() => {
+                      setIdCommentForDelete(null);
+                      setAlertDeleteDisplay(false);
+                    }}
+                    type="button" 
+                    disabled={deletingPost}
+                    className="py-2 px-4  bg-red-500 hover:bg-red-600 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md outline-none rounded-lg ">
+                      Cancel
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
         {!loading && (
           <div className="flex xl:flex-row flex-col m-auto bg-white max-w-[1500px] rounded-[32px] pb-8">
