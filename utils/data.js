@@ -27,7 +27,7 @@ export const unsaveQuery = (saveKey) => {
 }
 
 export const searchQuery = (searchTerm) => {
-    const query = `*[_type == "pin" && title match '${searchTerm}*' || category match '${searchTerm}*' || about match '${searchTerm}*']{
+    const query = `*[_type == "pin" && title match '${searchTerm}*' || category match '${searchTerm}*' || about match '${searchTerm}*'] | order(_id) [0...50] {
         _id,
         image_url,
         destination,

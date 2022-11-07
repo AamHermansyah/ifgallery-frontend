@@ -26,35 +26,49 @@ function Profile() {
   const router = useRouter();
   const { id } = router.query;
   const { data: session } = useSession();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   // redux
   const dispatch = useDispatch();
   const pins = useSelector(state => state.pins);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal();
+
+    setLoading(true);
     const query = userQuery(id);
 
-    client.fetch(query)
+    client.fetch(query, { signal })
     .then(data => {
-      setUser(data[0]);
+      if(data[0]) setUser(data[0]);
+      else router.push('/404');
     })
-    .catch(() => {
-      router.push('/404');
+    .catch((err) => {
+      if(err.name === "AbortError") return;
+      router.push('/500');
     })
-  }, []);
+
+    return () => {
+      controller.abort();
+    }
+  }, [id]);
 
   useEffect(() => {
     dispatch(addPins([]));
 
+    const controller = new AbortController();
+    const signal = controller.signal();
+
     if(text === 'Created'){
       const createdPinsQuery = userCreatedPinsQuery(id);
 
-      client.fetch(createdPinsQuery)
+      client.fetch(createdPinsQuery, { signal })
       .then((data) => {
         dispatch(addPins(data));
       })
       .catch(err => {
+        if(err.name === "AbortError") return;
         router.push('/500');
       })
       .finally(() => {
@@ -64,17 +78,22 @@ function Profile() {
     } else {
       const savedPinsQuery = userSavedPinsQuery(id);
 
-      client.fetch(savedPinsQuery)
+      client.fetch(savedPinsQuery, { signal })
       .then((data) => {
         dispatch(addPins(data));
       })
       .catch(err => {
+        if(err.name === "AbortError") return;
         router.push('/500');
       })
       .finally(() => {
         setLoading(false);
       })
 
+    }
+
+    return () => {
+      controller.abort();
     }
   }, [id, text]);
 
@@ -83,7 +102,7 @@ function Profile() {
       <Pins>
         {user && (
           <Head>
-            <title>{user.username}</title>
+            <title>{user ? user.username : 'View profile | Forgematics A'}</title>
             <meta name="description" content="User profile | Lihat apa yang temanmu pin dan upload" />
           </Head>
         )}

@@ -26,7 +26,7 @@ function Navbar() {
           onChange={e => setSearchTerm(e.target.value)}
           placeholder="Search"
           value={searchTerm}
-          onFocus={() => router.push('/search')}
+          onFocus={() => router.pathname !== '/search' && router.push('/search')}
           className="p-2 w-full bg-white outline-none"
           />
           <button type="submit">

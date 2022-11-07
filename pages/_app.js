@@ -6,13 +6,13 @@ import { NavigationContextWraper } from '../context/navigationContext'
 
 function MyApp({ Component, pageProps, session }) {
   return (
-      <SessionProvider session={session} >
-        <Provider store={store}>
-          <NavigationContextWraper>
-            <Component {...pageProps} />
-          </NavigationContextWraper>
-        </Provider>
-      </SessionProvider>
+    <SessionProvider session={session} >
+      <Provider store={store}>
+        <NavigationContextWraper>
+          <Component {...pageProps} />
+        </NavigationContextWraper>
+      </Provider>
+    </SessionProvider>
   )
 }
 

@@ -47,7 +47,7 @@ function PinDetail() {
   const dispatch = useDispatch();
   const pins = useSelector(state => state.pins);
 
-  const fetchPinDetail = () => {
+  const fetchPinDetail = (signal) => {
     let queryFetch = pinDetailQuery(id);
     if(queryFetch){
       client.fetch(queryFetch)
@@ -58,7 +58,7 @@ function PinDetail() {
           queryFetch = pinDetailMorePinQuery(data[0]);
 
           client
-          .fetch(queryFetch)
+          .fetch(queryFetch, { signal })
           .then(res => {
             dispatch(addPins(res));
           })
@@ -66,6 +66,7 @@ function PinDetail() {
         else router.push('/404');
       })
       .catch(err => {
+        if(err.name === "AbortError") return;
         router.push('/500');
       })
       .finally(() => {
@@ -76,7 +77,14 @@ function PinDetail() {
 
   useEffect(() => {
     if(user){
-      fetchPinDetail();
+      const controller = new AbortController();
+      const signal = controller.signal();
+      
+      fetchPinDetail(signal);
+
+      return () => {
+        controller.abort();
+      }
     }
   }, [user, id]);
 

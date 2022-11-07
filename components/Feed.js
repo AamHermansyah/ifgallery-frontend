@@ -18,26 +18,41 @@ function Feed() {
 
   useEffect(() => {
     setLoading(true);
-      dispatch(addPins([]));
-      if(categoryId){
-        const query = searchQuery(categoryId);
-  
-        client.fetch(query)
-        .then(data => {
-          dispatch(addPins(data));
-        })
-        .finally(() => {
-          setLoading(false);
-        })
-      } else {
-        client.fetch(feedQuery)
-        .then(data => {
-          dispatch(addPins(data));
-        })
-        .finally(() => {
-          setLoading(false);
-        })
-      }
+    const controller = new AbortController();
+    const signal = controller.signal();
+
+    dispatch(addPins([]));
+    if(categoryId){
+      const query = searchQuery(categoryId);
+
+      client.fetch(query, { signal })
+      .then(data => {
+        dispatch(addPins(data));
+      })
+      .catch(err => {
+        if(err.name === "AbortError") return;
+        router.push('/500');
+      })
+      .finally(() => {
+        setLoading(false);
+      })
+    } else {
+      client.fetch(feedQuery, { signal })
+      .then(data => {
+        dispatch(addPins(data));
+      })
+      .catch(err => {
+        if(err.name === "AbortError") return;
+        router.push('/500');
+      })
+      .finally(() => {
+        setLoading(false);
+      })
+    }
+
+    return () => {
+      controller.abort();
+    }
   }, [categoryId]);
 
   if(loading) return <Spinner message="Sabar ya ini masih loading!" />

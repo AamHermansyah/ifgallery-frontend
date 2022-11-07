@@ -9,6 +9,7 @@ import { useSession } from 'next-auth/react'
 
 import { Loading } from '../components'
 import { MdClose } from 'react-icons/md'
+import { url } from '../utils/config'
 
 function Navigation({children}) {
     const [toggleSidebar, setToggleSidebar] = useState(false);
@@ -56,7 +57,7 @@ function Navigation({children}) {
                         Forgematics A
                     </Link>
                 </div>
-                <Link href={`user-profile/${user._id}`} className="bg-gradient-to-tr from-pink-500 to-blue-600 p-0.5 flex items-center justify-center w-12 h-12 relative rounded-full">
+                <Link href={`${url}/profile/${user._id}`} className="bg-gradient-to-tr from-pink-500 to-blue-600 p-0.5 flex items-center justify-center w-12 h-12 relative rounded-full">
                     <div className="relative w-full h-full overflow-hidden rounded-full">
                         <Image src={`/api/imageproxy?url=${encodeURIComponent(user.image)}`} alt="my-profile" layout="fill" objectFit="cover" />
                     </div>
