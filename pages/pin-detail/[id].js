@@ -78,7 +78,7 @@ function PinDetail() {
   useEffect(() => {
     if(user){
       const controller = new AbortController();
-      const signal = controller.signal();
+      const signal = controller.signal;
       
       fetchPinDetail(signal);
 

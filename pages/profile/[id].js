@@ -34,7 +34,7 @@ function Profile() {
 
   useEffect(() => {
     const controller = new AbortController();
-    const signal = controller.signal();
+    const signal = controller.signal;
 
     setLoading(true);
     const query = userQuery(id);
@@ -58,7 +58,7 @@ function Profile() {
     dispatch(addPins([]));
 
     const controller = new AbortController();
-    const signal = controller.signal();
+    const signal = controller.signal;
 
     if(text === 'Created'){
       const createdPinsQuery = userCreatedPinsQuery(id);

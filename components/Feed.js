@@ -19,7 +19,7 @@ function Feed() {
   useEffect(() => {
     setLoading(true);
     const controller = new AbortController();
-    const signal = controller.signal();
+    const signal = controller.signal;
 
     dispatch(addPins([]));
     if(categoryId){

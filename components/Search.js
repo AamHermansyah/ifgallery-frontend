@@ -17,7 +17,7 @@ function Search() {
   useEffect(() => {
     dispatch(addPins([]));
     const controller = new AbortController();
-    const signal = controller.signal();
+    const signal = controller.signal;
 
     if(q){
       setLoading(true);

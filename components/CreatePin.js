@@ -90,7 +90,7 @@ function CreatePin() {
 
   return (
     <div className="flex flex-col justify-center items-center mt-5 lg:h-4/5">
-      <div className="flex lg:flex-row flex-col justify-center items-center bg-white lg:p-5 p-3 pb-6 lg:w-4/5 w-full">
+      <div className="flex lg:flex-row flex-col justify-center items-center bg-white lg:p-5 p-3 lg:w-4/5 w-full">
         <div className="bg-secondaryColor p-3 flex flex-0.7 w-full">
           <div className="relative flex justify-center items-center flex-col border-2 border-dotted border-gray-300 p-3 w-full h-[300px] sm:h-420">
             {cekImageStatus && (
@@ -166,7 +166,7 @@ function CreatePin() {
             {fields && (
               <p className="text-red-500 mt-3 text-md sm:text-xl transition-all duration-150 ease-in">Jangan buta map ya, harap diisi inputnya:(</p>
             )}
-            <div className="flex justify-end items-end">
+            <div className="flex justify-end items-end pb-6">
               <button
               type="button"
               onClick={savePin}
