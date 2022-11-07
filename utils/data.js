@@ -83,6 +83,7 @@ export const pinDetailQuery = (pinId) => {
         image_url
       },
      save[] {
+         _key,
         posted_by -> {
           _id,
           username,

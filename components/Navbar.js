@@ -26,7 +26,7 @@ function Navbar() {
         />
       </div>
       <div className="flex gap-3">
-        <Link href={`user-profile/${user.userId}`} className="hidden md:flex bg-gradient-to-tr from-pink-500 to-blue-600 p-0.5 items-center justify-center w-12 h-12 relative rounded-full">
+        <Link href={`${process.env.URL}/user-profile/${user.userId}`} className="hidden md:flex bg-gradient-to-tr from-pink-500 to-blue-600 p-0.5 items-center justify-center w-12 h-12 relative rounded-full">
           <div className="relative w-full h-full overflow-hidden rounded-full">
               <Image src={`/api/imageproxy?url=${encodeURIComponent(user.image)}`} alt="my-profile" layout="fill" objectFit="cover" />
           </div>

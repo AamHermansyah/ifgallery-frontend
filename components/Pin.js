@@ -18,7 +18,7 @@ function Pin({pin, onDelete}) {
         width: 1,
         height: 1
        });
-
+    const [cardActionDisplay, setCardActionDisplay] = useState(false);
     const [savingPost, setSavingPost] = useState(false);
     const [unsavingPost, setUnsavingPost] = useState(false);
     const [alreadySaved, setAlreadySaved] = useState(false);
@@ -89,7 +89,9 @@ function Pin({pin, onDelete}) {
         <div className="mt-2">
             <div
                 onClick={() => router.push(`/pin-detail/${pin._id}`)}
-                className="relative cursor-zoom-in w-auto hover:shadow-lg rounded-lg overflow-hidden transition-all duration-500 ease-in-out group"
+                onMouseEnter={_ => setCardActionDisplay(true)}
+                onMouseLeave={_ => setCardActionDisplay(false)}
+                className="relative cursor-zoom-in w-auto hover:shadow-lg rounded-lg overflow-hidden transition-all duration-500 ease-in-out"
             >
                 <Image
                     src={`/api/imageproxy?url=${encodeURIComponent(pin.image_url)}`}
@@ -108,7 +110,7 @@ function Pin({pin, onDelete}) {
                     className="rounded-lg w-full"
                 />
                 <div
-                className="hidden opacity-0 group-hover:opacity-100 group-hover:flex absolute inset-0 flex-col justify-between p-1 pr-2 py-2 z-50">
+                className={`${cardActionDisplay ? 'flex' : 'hidden'} absolute inset-0 flex-col justify-between p-1 pr-2 py-2 z-50`}>
                     <div className="flex gap-2 justify-between">
                         <a
                         href={pin?.image_url?.replace('=view', '=download')}

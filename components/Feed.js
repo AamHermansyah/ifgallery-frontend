@@ -16,21 +16,21 @@ function Feed() {
   const { categoryId } = router.query;
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if(categoryId){
-      setLoading(true);
+  // useEffect(() => {
+  //   if(categoryId){
+  //     setLoading(true);
 
-      const query = searchQuery(categoryId);
+  //     const query = searchQuery(categoryId);
 
-      client.fetch(query)
-      .then(data => {
-        dispatch(addPins(data));
-      })
-      .finally(() => {
-        setLoading(false);
-      })
-    }
-  }, [categoryId]);
+  //     client.fetch(query)
+  //     .then(data => {
+  //       dispatch(addPins(data));
+  //     })
+  //     .finally(() => {
+  //       setLoading(false);
+  //     })
+  //   }
+  // }, [categoryId]);
 
   useEffect(() => {
     if(pins === null){
