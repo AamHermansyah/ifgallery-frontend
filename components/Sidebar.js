@@ -60,7 +60,7 @@ function Sidebar({user}) {
             <p className="ml-2">{truncateName(user.name)}</p>
           </Link>
         )}
-        <Link href="create-pin" className="max-w-[200px] py-2 ml-4 opacity-100 hover:shadow-md hover:opacity-80 flex md:hidden bg-gradient-to-tr from-pink-500 to-blue-600 text-white font-bold shadow-md rounded-lg justify-center items-center transition-all duration-200">
+        <Link href={`${url}/create-pin`} className="max-w-[200px] py-2 ml-4 opacity-100 hover:shadow-md hover:opacity-80 flex md:hidden bg-gradient-to-tr from-pink-500 to-blue-600 text-white font-bold shadow-md rounded-lg justify-center items-center transition-all duration-200">
             Buat Pin
         </Link>
       </div>

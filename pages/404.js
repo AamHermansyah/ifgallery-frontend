@@ -1,6 +1,15 @@
 import Head from "next/head";
+import { useEffect } from "react"
+import { useRouter } from "next/router"
+import { url } from "../utils/config";
 
 export default function Custom404() {
+    const router = useRouter();
+    useEffect(() => {
+        return () => {
+            router.push(url);
+        }
+    })
     return (
         <>
             <Head>

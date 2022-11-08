@@ -26,33 +26,39 @@ function Profile() {
   const router = useRouter();
   const { id } = router.query;
   const { data: session } = useSession();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // redux
   const dispatch = useDispatch();
   const pins = useSelector(state => state.pins);
 
+  const handleSignOut = () => {
+    signOut();
+    router.push('/login');
+  }
+
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
 
-    setLoading(true);
-    const query = userQuery(id);
+    if(loading){
+      const query = userQuery(id);
 
-    client.fetch(query, { signal })
-    .then(data => {
-      if(data[0]) setUser(data[0]);
-      else router.push('/404');
-    })
-    .catch((err) => {
-      if(err.name === "AbortError") return;
-      router.push('/500');
-    })
+      client.fetch(query, { signal })
+      .then(data => {
+        if(data[0]) setUser(data[0]);
+        else router.push('/404');
+      })
+      .catch((err) => {
+        if(err.name === "AbortError") return;
+        router.push('/500');
+      })
+    }
 
     return () => {
       controller.abort();
     }
-  }, [id]);
+  }, [id, loading]);
 
   useEffect(() => {
     dispatch(addPins([]));
@@ -94,8 +100,9 @@ function Profile() {
 
     return () => {
       controller.abort();
+      setLoading(true);
     }
-  }, [id, text]);
+  }, [id, text, loading]);
 
   return (
     <Navigation>
@@ -147,7 +154,7 @@ function Profile() {
                   </h1>
                   {session?.user?.userId === user?._id && (
                     <div className="absolute top-0 z-1 right-0 pb-4 sm:pb-0 p-2">
-                        <button onClick={signOut}
+                        <button onClick={handleSignOut}
                         className="bg-red-500 font-bold flex gap-2 items-center text-white p-2 px-5 shadow-md outline-none rounded-full">
                           Logout
                           <AiOutlineLogout fontSize={21} />

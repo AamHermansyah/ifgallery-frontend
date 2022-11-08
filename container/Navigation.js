@@ -36,7 +36,7 @@ function Navigation({children}) {
 
     if(status === 'unauthenticated'){
         route.push('/login');
-        return null
+        return
     }
     
     const { user } = session;
@@ -53,7 +53,7 @@ function Navigation({children}) {
                     className="cursor-pointer"
                     onClick={() => setToggleSidebar(true)}
                     />
-                    <Link href="/" className="text-xl text-blue-900 ml-4 font-extrabold">
+                    <Link href={url} className="text-xl text-blue-900 ml-4 font-extrabold">
                         Forgematics A
                     </Link>
                 </div>

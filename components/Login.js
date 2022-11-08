@@ -16,17 +16,18 @@ function Login() {
     setLoadingButton(false);
   }, []);
 
-  if(status === "loading" || session === undefined){
+  if(status === "loading"){
     return <Loading />
   }
 
-  if(session?.user && status === "authenticated"){
-    if(session?.error){
-      router.push('/500');
-      signOut();
-    }
-    else router.push('/');
-    return null
+  if(session?.error){
+    router.push('/500');
+    signOut();
+  }
+
+  if(session?.user || status === "authenticated"){
+    router.push('/');
+    return;
   }
 
   return (
@@ -45,7 +46,7 @@ function Login() {
         <div className="shadow-2xl">
           <button
           type="button"
-          className="bg-mainColor text-black flex justify-center items-center p-3 rounded-lg cursor-pointer outline-none"
+          className={`${loadingButton ? 'px-4' : ''} bg-mainColor text-black flex justify-center items-center p-3 rounded-lg cursor-pointer outline-none`}
           disabled={loadingButton}
           onClick={() => {
             setLoadingButton(true);

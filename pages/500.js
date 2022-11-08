@@ -1,6 +1,15 @@
-import Head from "next/head";
+import Head from "next/head"
+import { useEffect } from "react"
+import { useRouter } from "next/router"
 
 export default function Custom500() {
+    const router = useRouter();
+    useEffect(() => {
+        return () => {
+            router.push(url);
+        }
+    })
+
     return (
         <>
             <Head>
