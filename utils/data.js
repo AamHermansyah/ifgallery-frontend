@@ -106,7 +106,7 @@ export const pinDetailQuery = (pinId) => {
 };
 
 export const pinDetailMorePinQuery = (pin) => {
-  const query = `*[_type == "pin" && _id != '${pin._id}' || title match '${pin.title}*' || about match '${pin.about}*'] | order(_id) [0...20] {
+  const query = `*[_type == "pin" && _id != '${pin._id}' || title match '${pin.title}*' || category match '${pin.category}'] | order(_createdAt asc) [0...20] {
     image_url,
     _id,
     destination,

@@ -5,11 +5,13 @@ import { url } from "../utils/config";
 
 export default function Custom404() {
     const router = useRouter();
+    
     useEffect(() => {
         return () => {
-            router.push(url);
+            router.push('/');
         }
     })
+
     return (
         <>
             <Head>

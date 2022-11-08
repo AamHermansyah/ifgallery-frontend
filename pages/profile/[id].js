@@ -46,8 +46,7 @@ function Profile() {
 
       client.fetch(query, { signal })
       .then(data => {
-        if(data[0]) setUser(data[0]);
-        else router.push('/404');
+        setUser(data[0]);
       })
       .catch((err) => {
         if(err.name === "AbortError") return;
@@ -58,58 +57,60 @@ function Profile() {
     return () => {
       controller.abort();
     }
-  }, [id, loading]);
+  }, [id]);
 
   useEffect(() => {
-    dispatch(addPins([]));
-
     const controller = new AbortController();
     const signal = controller.signal;
 
-    if(text === 'Created'){
-      const createdPinsQuery = userCreatedPinsQuery(id);
+    dispatch(addPins([]));
+    if(user){
+      setLoading(true);
 
-      client.fetch(createdPinsQuery, { signal })
-      .then((data) => {
-        dispatch(addPins(data));
-      })
-      .catch(err => {
-        if(err.name === "AbortError") return;
-        router.push('/500');
-      })
-      .finally(() => {
-        setLoading(false);
-      })
-
-    } else {
-      const savedPinsQuery = userSavedPinsQuery(id);
-
-      client.fetch(savedPinsQuery, { signal })
-      .then((data) => {
-        dispatch(addPins(data));
-      })
-      .catch(err => {
-        if(err.name === "AbortError") return;
-        router.push('/500');
-      })
-      .finally(() => {
-        setLoading(false);
-      })
-
+      if(text === 'Created'){
+        const createdPinsQuery = userCreatedPinsQuery(id);
+  
+        client.fetch(createdPinsQuery, { signal })
+        .then((data) => {
+          dispatch(addPins(data));
+        })
+        .catch(err => {
+          if(err.name === "AbortError") return;
+          router.push('/500');
+        })
+        .finally(() => {
+          setLoading(false);
+        })
+        
+      } else {
+        const savedPinsQuery = userSavedPinsQuery(id);
+  
+        client.fetch(savedPinsQuery, { signal })
+        .then((data) => {
+          dispatch(addPins(data));
+        })
+        .catch(err => {
+          if(err.name === "AbortError") return;
+          router.push('/500');
+        })
+        .finally(() => {
+          setLoading(false);
+        })
+      }
     }
 
     return () => {
       controller.abort();
-      setLoading(true);
     }
-  }, [id, text, loading]);
+
+  }, [id, text, user]);
 
   return (
     <Navigation>
       <Pins>
         {user && (
           <Head>
-            <title>{user ? user.username : 'View profile | Forgematics A'}</title>
+            <title>{`${user.username} | Profile`}</title>
             <meta name="description" content="User profile | Lihat apa yang temanmu pin dan upload" />
           </Head>
         )}
