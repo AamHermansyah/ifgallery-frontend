@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FcGoogle } from 'react-icons/fc'
 import Image from 'next/legacy/image'
 import bgLandscape from '../public/bg_landscape.jpg'
@@ -10,6 +10,11 @@ import Loading from './Loading'
 function Login() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [loadingButton, setLoadingButton] = useState(false);
+
+  useEffect(() => {
+    setLoadingButton(false);
+  }, []);
 
   if(status === "loading" || session === undefined){
     return <Loading />
@@ -17,7 +22,7 @@ function Login() {
 
   if(session?.user && status === "authenticated"){
     if(session?.error){
-      alert(session.error);
+      router.push('/500');
       signOut();
     }
     else router.push('/');
@@ -41,9 +46,17 @@ function Login() {
           <button
           type="button"
           className="bg-mainColor text-black flex justify-center items-center p-3 rounded-lg cursor-pointer outline-none"
-          onClick={() => signIn("google")}
+          disabled={loadingButton}
+          onClick={() => {
+            setLoadingButton(true);
+            signIn("google");
+          }}
           >
-            <FcGoogle className="mr-4" /> Sign in with Google
+            {loadingButton ? 'Loading...' : (
+              <>
+                <FcGoogle className="mr-4" /> Sign in with Google
+              </>
+            )}
           </button>
         </div>
       </div>

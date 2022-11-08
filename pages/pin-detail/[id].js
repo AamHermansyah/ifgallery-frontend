@@ -19,6 +19,7 @@ import { getDateWithDayName, getHoursAndMinutes } from '../../utils/formatDate';
 import { useDispatch, useSelector } from 'react-redux';
 import { addPins } from '../../app/features/pins/pinsSlice';
 import Head from 'next/head';
+import { url } from '../../utils/config';
 
 function PinDetail() {
   const [acpectImageType, setAcpectImageType] = useState('square');
@@ -77,6 +78,7 @@ function PinDetail() {
 
   useEffect(() => {
     if(user){
+      !loading && setLoading(true);
       const controller = new AbortController();
       const signal = controller.signal;
       
@@ -97,25 +99,27 @@ function PinDetail() {
   // save pin
   const savePin = (id) => {
     if(!alreadySaved){
-        setSavingPost(true);
+      setSavingPost(true);
 
-        client
-            .patch(id)
-            .setIfMissing({ save: [] })
-            .insert('after', 'save[-1]', [{
-                _key: uuidv4(),
-                user_id: user.userId,
-                posted_by: {
-                    _type: 'posted_by',
-                    _ref: user.userId
-                }
-            }])
-            .commit()
-            .then((data) => {
-              setPinDetail(prev => ({
+      client
+          .patch(id)
+          .setIfMissing({ save: [] })
+          .insert('after', 'save[-1]', [{
+              _key: uuidv4(),
+              user_id: user.userId,
+              posted_by: {
+                  _type: 'posted_by',
+                  _ref: user.userId
+              }
+          }])
+          .commit()
+          .then((data) => {
+            setPinDetail(prev => {
+              const prevSave = prev?.save ? prev.save : [];
+              return {
                 ...prev,
                 save: [
-                  ...prev.save,
+                  ...prevSave,
                   {
                     _key: data.save.find(item => item.user_id === user.userId)._key,
                     user_id: user.userId,
@@ -126,15 +130,16 @@ function PinDetail() {
                     }
                   }
                 ]
-              }));
-              setAlreadySaved(true);
-            })
-            .catch(err => {
-                router.push('/500');
-            })
-            .finally(() => {
-                setSavingPost(false);
-            })
+              }
+            });
+            setAlreadySaved(true);
+          })
+          .catch(err => {
+              router.push('/500');
+          })
+          .finally(() => {
+              setSavingPost(false);
+          })
       }
   }
 
@@ -189,21 +194,24 @@ function PinDetail() {
       }])
       .commit()
       .then(() => {
-        setPinDetail(prev => ({
-          ...prev,
-          comments: [
-            ...prev.comments,
-            {
-              comment,
-              create_at: date,
-              posted_by: {
-                _id: user.userId,
-                username: user.name,
-                image_url: user.image
+        setPinDetail(prev => {
+          const prevComment = prev?.comments ? prev.comments : [];
+          return {
+            ...prev,
+            comments: [
+              ...prevComment,
+              {
+                comment,
+                create_at: date,
+                posted_by: {
+                  _id: user.userId,
+                  username: user.name,
+                  image_url: user.image
+                }
               }
-            }
-          ]
-        }))
+            ]
+          }
+        })
         setComment('');
       })
       .catch(err => {
@@ -262,7 +270,7 @@ function PinDetail() {
               <div className="w-full h-full text-center my-3">
                 <div className="flex h-full flex-col justify-between">
                   <MdOutlineAutoDelete fontSize={60} className="mx-auto" />
-                  <p className="text-gray-800 text-xl font-bold mt-4">Hapus roasting ehh posting</p>
+                  <p className="text-gray-800 text-xl font-bold mt-4">Hapus roasting</p>
                   <p className="text-gray-600 text-base py-2 px-6">Kamu nanya?... Ingin menghapus?</p>
                   <div className="flex items-center justify-between gap-4 w-full mt-6">
                     <button 
@@ -382,7 +390,7 @@ function PinDetail() {
                 </p>
                 <p className="mt-3 text-base sm:text-lg">{pinDetail.about}</p>
               </div>
-              <Link href={`${process.env.URL}/user-profile/${pinDetail?.posted_by._id}`} className="flex gap-2 mt-5 items-center bg-white rounded-lg">
+              <Link href={`${url}/user-profile/${pinDetail?.posted_by._id}`} className="flex gap-2 mt-5 items-center bg-white rounded-lg">
                 <div className="hidden md:flex bg-gradient-to-tr from-yellow-500 to-violet-600 p-0.5 items-center justify-center w-8 sm:w-12 h-8 sm:h-12 relative rounded-full">
                     <div className="relative w-full h-full overflow-hidden rounded-full">
                         <Image src={`/api/imageproxy?url=${encodeURIComponent(pinDetail?.posted_by.image_url)}`} alt="my-profile" layout="fill" objectFit="cover" />
@@ -462,7 +470,7 @@ function PinDetail() {
             </div>
           </div>
         )}
-        {pins?.length > 0 && (
+        {pins?.length > 0 && !loading  && (
           <>
             <h2 className="text-lg">More like this</h2>
             <MasonryLayout pins={pins} />

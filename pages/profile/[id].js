@@ -146,7 +146,7 @@ function Profile() {
                     {user.username}
                   </h1>
                   {session?.user?.userId === user?._id && (
-                    <div className="absolute top-0 z-1 right-0 p-2">
+                    <div className="absolute top-0 z-1 right-0 pb-4 sm:pb-0 p-2">
                         <button onClick={signOut}
                         className="bg-red-500 font-bold flex gap-2 items-center text-white p-2 px-5 shadow-md outline-none rounded-full">
                           Logout
