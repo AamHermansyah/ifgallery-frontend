@@ -390,7 +390,7 @@ function PinDetail() {
                 </p>
                 <p className="mt-3 text-base sm:text-lg">{pinDetail.about}</p>
               </div>
-              <Link href={`${url}/user-profile/${pinDetail?.posted_by._id}`} className="flex gap-2 mt-5 items-center bg-white rounded-lg">
+              <Link href={`${url}/profile/${pinDetail?.posted_by._id}`} className="flex gap-2 mt-5 items-center bg-white rounded-lg">
                 <div className="hidden md:flex bg-gradient-to-tr from-yellow-500 to-violet-600 p-0.5 items-center justify-center w-8 sm:w-12 h-8 sm:h-12 relative rounded-full">
                     <div className="relative w-full h-full overflow-hidden rounded-full">
                         <Image src={`/api/imageproxy?url=${encodeURIComponent(pinDetail?.posted_by.image_url)}`} alt="my-profile" layout="fill" objectFit="cover" />
@@ -410,7 +410,7 @@ function PinDetail() {
                   className={`${index !== arr.length - 1 ? 'border-b-[1px] border-gray-300 pb-3' : ''} flex flex-col gap-2 mt-3 bg-white`} 
                   key={index}>
                     <div className="flex gap-2 bg-white rounded-lg">
-                      <Link href={`user-profile/${pinDetail?.posted_by._id}`}
+                      <Link href={`${url}/profile/${pinDetail?.posted_by._id}`}
                       className="flex bg-white border-2 border-gray-900 p-0.5 items-center justify-center w-10 h-10 relative rounded-full">
                           <div className="relative w-full h-full overflow-hidden rounded-full">
                               <Image src={`/api/imageproxy?url=${encodeURIComponent(comment?.posted_by?.image_url)}`} alt="my-profile" layout="fill" objectFit="cover" />

@@ -89,7 +89,7 @@ function Pin({pin, onDelete}) {
     return (
         <div className="mt-2">
             <div
-                onClick={() => router.push(`/pin-detail/${pin._id}`)}
+                onClick={() => router.push(`${url}/pin-detail/${pin._id}`)}
                 onMouseEnter={_ => setCardActionDisplay(true)}
                 onMouseLeave={_ => setCardActionDisplay(false)}
                 className="relative cursor-zoom-in w-auto hover:shadow-lg rounded-lg overflow-hidden transition-all duration-500 ease-in-out"
@@ -189,6 +189,9 @@ function Pin({pin, onDelete}) {
                     </div>
                 </div>
             </div>
+            <Link href={`${url}/pin-detail/${pin._id}`} className="block mb-2 p-1 text-lg font-bold">
+                {pin?.title?.length > 30 ? `${pin?.title.slice(0, 30)}...` : pin?.title}
+            </Link>
             <Link href={`${url}/profile/${pin?.posted_by._id}`} className="flex items-center mt-2 gap-2 mb-4">
                 <div className="flex bg-gradient-to-tr from-pink-500 to-blue-600 p-0.5 items-center justify-center w-8 h-8 relative rounded-full">
                     <div className="relative w-full h-full overflow-hidden rounded-full">

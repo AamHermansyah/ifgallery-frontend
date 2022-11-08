@@ -41,7 +41,7 @@ function Profile() {
     const controller = new AbortController();
     const signal = controller.signal;
 
-    if(loading){
+    if(loading || id){
       const query = userQuery(id);
 
       client.fetch(query, { signal })

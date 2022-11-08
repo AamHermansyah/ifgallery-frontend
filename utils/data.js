@@ -54,6 +54,7 @@ export const feedQuery = `*[_type == 'pin'] | order(_createAt desc) {
     _id,
     image_url,
     destination,
+    title,
     posted_by -> {
         _id,
         username,
@@ -106,7 +107,14 @@ export const pinDetailQuery = (pinId) => {
 };
 
 export const pinDetailMorePinQuery = (pin) => {
-  const query = `*[_type == "pin" && _id != '${pin._id}' || title match '${pin.title}*' || category match '${pin.category}'] | order(_createdAt asc) [0...20] {
+  const title = pin.title
+    .toLowerCase()
+    .split(" ")
+    .map((str) => `title match "${str}"`)
+    .filter((str, index) => index < 4)
+    .join(' || ');
+
+  const query = `*[_type == "pin" && _id != '${pin._id}' && ${title}] | order(_createdAt asc) [0...20] {
     image_url,
     _id,
     destination,
@@ -133,6 +141,7 @@ export const userCreatedPinsQuery = (userId) => {
     image_url,
     _id,
     destination,
+    title,
     posted_by -> {
       _id,
       username,
@@ -154,6 +163,7 @@ export const userSavedPinsQuery = (userId) => {
     image_url,
     _id,
     destination,
+    title,
     posted_by -> {
       _id,
       username,
