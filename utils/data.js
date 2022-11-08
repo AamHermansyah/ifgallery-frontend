@@ -3,6 +3,7 @@ import { GiPalmTree, GiBookshelf } from "react-icons/gi"
 import { RiEmotionLaughLine, RiZzzFill } from "react-icons/ri"
 import { MdEmojiPeople } from "react-icons/md"
 import { BiDotsHorizontal } from "react-icons/bi"
+import { GrWorkshop } from "react-icons/gr"
 
 export const userQuery = (userId) => {
     const query = `*[_type == "user" && _id == '${userId}']`
@@ -189,6 +190,10 @@ export const categories = [
     {
         name: 'Gabut',
         icon: <RiZzzFill />
+    },
+    {
+        name: 'Kegiatan',
+        icon: <GrWorkshop />
     },
     {
         name: 'Sendiri aja',
