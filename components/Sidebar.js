@@ -7,6 +7,7 @@ import { categories } from '../utils/data'
 import { truncateName } from '../utils/truncateString'
 import { useRouter } from 'next/router';
 import { url } from '../utils/config'
+import { MdGroups } from 'react-icons/md'
 
 function Sidebar({user}) {
   const {navigationActive, setNavigationActive} = useContext(NavigationContextApp);
@@ -17,9 +18,14 @@ function Sidebar({user}) {
   const isNotActive = "text-gray-600 hover:text-black"
 
   useEffect(() => {
-    if(router.pathname === '/'){
-      categoryId && setNavigationActive(categoryId);
-      !categoryId && setNavigationActive("home");
+    switch(router.pathname){
+      case '/':
+        categoryId && setNavigationActive(categoryId);
+        !categoryId && setNavigationActive('home');
+        break;
+      case '/member-list':
+        setNavigationActive('member-list')
+        break
     }
   }, [categoryId, router.pathname])
 
@@ -37,6 +43,13 @@ function Sidebar({user}) {
             >
               <HiHome />
               Home
+            </Link>
+            <Link 
+            href="/member-list" 
+            className={`${navigationActive === "member-list" ? isActive : isNotActive} flex items-center px-5 gap-3 transition-all duration-200 capitalize`}
+            >
+              <MdGroups />
+              Member List
             </Link>
             <h3 className="px-5 text-base 2xl:text-xl">Discover Categories</h3>
             {categories.map((category, index) => (
@@ -60,9 +73,11 @@ function Sidebar({user}) {
             <p className="ml-2">{truncateName(user.name)}</p>
           </Link>
         )}
-        <Link href={`${url}/create-pin`} className="max-w-[200px] py-2 ml-4 opacity-100 hover:shadow-md hover:opacity-80 flex md:hidden bg-gradient-to-tr from-pink-500 to-blue-600 text-white font-bold shadow-md rounded-lg justify-center items-center transition-all duration-200">
-            Buat Pin
-        </Link>
+        {user?.role === 'admin' && (
+          <Link href={`${url}/create-pin`} className="max-w-[200px] py-2 ml-4 opacity-100 hover:shadow-md hover:opacity-80 flex md:hidden bg-gradient-to-tr from-pink-500 to-blue-600 text-white font-bold shadow-md rounded-lg justify-center items-center transition-all duration-200">
+              Buat Pin
+          </Link>
+        )}
       </div>
     </aside>
   )

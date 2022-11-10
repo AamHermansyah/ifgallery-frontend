@@ -24,7 +24,8 @@ export default NextAuth({
             _id: user.userId,
             _type: 'user',
             username: user.name,
-            image_url: user.image
+            image_url: user.image,
+            role_user: 'user'
           }
       
           try {

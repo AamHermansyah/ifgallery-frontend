@@ -40,9 +40,11 @@ function Navbar() {
               <Image src={`/api/imageproxy?url=${encodeURIComponent(user.image)}`} alt="my-profile" layout="fill" objectFit="cover" />
           </div>
         </Link>
-        <Link href={`${url}/create-pin`} className="hidden md:flex bg-gradient-to-tr from-pink-500 to-blue-600 text-white shadow-md rounded-lg w-12 h-12 justify-center items-center">
-          <IoMdAdd fontSize={25} />
-        </Link>
+        {user?.role === 'admin' && (
+          <Link href={`${url}/create-pin`} className="hidden md:flex bg-gradient-to-tr from-pink-500 to-blue-600 text-white shadow-md rounded-lg w-12 h-12 justify-center items-center">
+            <IoMdAdd fontSize={25} />
+          </Link>
+        )}
       </div>
     </div>
   )

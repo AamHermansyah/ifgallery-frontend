@@ -6,7 +6,7 @@ export default function Custom500() {
     const router = useRouter();
     useEffect(() => {
         return () => {
-            router.push(url);
+            router.push('/');
         }
     })
 

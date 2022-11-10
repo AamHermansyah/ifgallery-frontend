@@ -12,7 +12,7 @@ import Navigation from '../../container/Navigation';
 import Pins from '../../container/Pins';
 import { deleteCommentQuery, pinDetailMorePinQuery, pinDetailQuery, unsaveQuery } from '../../utils/data';
 import { truncateName } from '../../utils/truncateString';
-import { AiOutlineLoading3Quarters, AiTwotoneHeart } from 'react-icons/ai';
+import { AiOutlineLoading3Quarters, AiTwotoneDelete, AiTwotoneEdit, AiTwotoneHeart } from 'react-icons/ai';
 import { useSession } from 'next-auth/react';
 import MasonryLayout from '../../components/MasonryLayout';
 import { getDateWithDayName, getHoursAndMinutes } from '../../utils/formatDate';
@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addPins } from '../../app/features/pins/pinsSlice';
 import Head from 'next/head';
 import { url } from '../../utils/config';
+import DeletePinDetail from '../../components/DeletePinDetail';
 
 function PinDetail() {
   const [acpectImageType, setAcpectImageType] = useState('square');
@@ -34,10 +35,13 @@ function PinDetail() {
   const [unsavingPost, setUnsavingPost] = useState(false);
   const [alreadySaved, setAlreadySaved] = useState(false);
 
-  // delete state
-  const [alertDeleteDisplay, setAlertDeleteDisplay] = useState(false);
+  // delete comment state
+  const [alertDeleteCommentDisplay, setAlertDeleteCommentDisplay] = useState(false);
   const [idCommentForDelete, setIdCommentForDelete] = useState(null);
   const [deletingPost, setDeletingPost] = useState(false);
+
+  // delete pin state
+  const [idPinForDelete, setIdPinForDelete] = useState(null);
 
   const router = useRouter();
   const { id } = router.query;
@@ -53,9 +57,9 @@ function PinDetail() {
     if(queryFetch){
       client.fetch(queryFetch)
       .then(data => {
-        setPinDetail(data[0]);
 
         if(data[0]){
+          setPinDetail(data[0]);
           queryFetch = pinDetailMorePinQuery(data[0]);
 
           client
@@ -63,8 +67,8 @@ function PinDetail() {
           .then(res => {
             dispatch(addPins(res));
           })
-        } 
-        else router.push('/404');
+        } else router.push('/404');
+        
       })
       .catch(err => {
         if(err.name === "AbortError") return;
@@ -77,16 +81,16 @@ function PinDetail() {
   }
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     if(user){
       !loading && setLoading(true);
-      const controller = new AbortController();
-      const signal = controller.signal;
-      
       fetchPinDetail(signal);
+    }
 
-      return () => {
-        controller.abort();
-      }
+    return () => {
+      controller.abort();
     }
   }, [user, id]);
 
@@ -243,7 +247,7 @@ function PinDetail() {
         .finally(() => {
           setDeletingPost(false);
           setIdCommentForDelete(null);
-          setAlertDeleteDisplay(false);
+          setAlertDeleteCommentDisplay(false);
         });
   }
 
@@ -252,9 +256,9 @@ function PinDetail() {
       <Pins>
         {!loading && (
           <Head>
-            <title>{pinDetail.title} | {pinDetail.posted_by.username}</title>
-            <meta name="description" content={pinDetail.about} />
-            <meta name="author" content={pinDetail.posted_by.username} />
+            <title>{pinDetail?.title} | {pinDetail?.posted_by?.username}</title>
+            <meta name="description" content={pinDetail?.about} />
+            <meta name="author" content={pinDetail?.posted_by?.username} />
           </Head>
         )}
 
@@ -264,7 +268,9 @@ function PinDetail() {
           </div>
         )}
 
-        {alertDeleteDisplay && (
+        <DeletePinDetail idPinForDelete={idPinForDelete} clearIdPin={state => setIdPinForDelete(state)} />
+
+        {alertDeleteCommentDisplay && (
           <div id="alert-delete" className="fixed inset-0 flex items-center justify-center z-[100] bg-white bg-opacity-70 backdrop-blur-sm">
             <div className="shadow-lg rounded-2xl p-4 bg-white w-64 sm:w-[300px] m-auto">
               <div className="w-full h-full text-center my-3">
@@ -283,7 +289,7 @@ function PinDetail() {
                     <button 
                     onClick={() => {
                       setIdCommentForDelete(null);
-                      setAlertDeleteDisplay(false);
+                      setAlertDeleteCommentDisplay(false);
                     }}
                     type="button" 
                     disabled={deletingPost}
@@ -316,49 +322,72 @@ function PinDetail() {
                 <div className="bg-gradient-to-tr bg-white text-gray-900 opacity-80 font-bold px-5 py-2 text-base rounded-3xl hover:shadow-md outline-none cursor-default">
                     {pinDetail?.save ? pinDetail?.save.length : '0'} Saved
                 </div>
-                {alreadySaved ? (
-                  <button 
-                  type="button" 
-                  className="bg-white text-red-500 py-2 px-5 font-bold text-base rounded-3xl hover:shadow-md outline-none cursor-pointer"
-                  disabled={unsavingPost}
-                  onClick={() => unsavePin(pinDetail)}>
-                      {unsavingPost ? (
-                          <div className="flex items-center gap-2">
-                            <div className="animate-spin">
-                                <AiOutlineLoading3Quarters/>
-                            </div>
-                            <span>Unsaving...</span>
-                          </div>
-                          ) : (
+                <div className="flex justify-between w-full">
+                  {pinDetail?.posted_by?._id === user?.userId && (
+                    <div className="flex w-max">
+                      <button 
+                      type="button" 
+                      className="bg-white text-red-500 py-2 px-5 font-bold text-base rounded-3xl hover:shadow-md outline-none cursor-pointer"
+                      onClick={() => setIdPinForDelete(pinDetail?._id)}>
+                        <div className="flex items-center gap-2">
+                          <AiTwotoneDelete />
+                          <span>Delete</span>
+                        </div>
+                      </button>
+                      <Link 
+                      href={`${url}/edit-pin/${pinDetail?._id}`}
+                      className="block bg-white text-red-500 py-2 px-5 ml-3 font-bold text-base rounded-3xl hover:shadow-md outline-none cursor-pointer">
+                        <div className="flex items-center gap-2">
+                            <AiTwotoneEdit />
+                            <span>Edit</span>
+                        </div>
+                      </Link>
+                    </div>
+                  )}
+                  {alreadySaved ? (
+                    <button 
+                    type="button" 
+                    className="bg-white text-red-500 py-2 px-5 font-bold text-base rounded-3xl hover:shadow-md outline-none cursor-pointer"
+                    disabled={unsavingPost}
+                    onClick={() => unsavePin(pinDetail)}>
+                        {unsavingPost ? (
                             <div className="flex items-center gap-2">
-                              <AiTwotoneHeart/>
-                              <span>Unsaved</span>
+                              <div className="animate-spin">
+                                  <AiOutlineLoading3Quarters/>
+                              </div>
+                              <span>Unsaving...</span>
                             </div>
-                          )
-                      }
-                  </button>
-                  ) : (
-                  <button 
-                  type="button"
-                  className="bg-gradient-to-tr from-pink-500 to-yellow-500 py-2 px-5 text-white font-bold text-base rounded-3xl hover:shadow-md outline-none cursor-pointer"
-                  disabled={savingPost}
-                  onClick={() => savePin(pinDetail._id)}>
-                      {savingPost ? (
-                          <div className="flex items-center gap-2">
-                            <div className="animate-spin">
-                                <AiOutlineLoading3Quarters/>
-                            </div>
-                            <span>Saving..</span>
-                          </div>
-                          ) : (
+                            ) : (
+                              <div className="flex items-center gap-2">
+                                <AiTwotoneHeart/>
+                                <span>Unsaved</span>
+                              </div>
+                            )
+                        }
+                    </button>
+                    ) : (
+                    <button 
+                    type="button"
+                    className="bg-gradient-to-tr from-pink-500 to-yellow-500 py-2 px-5 text-white font-bold text-base rounded-3xl hover:shadow-md outline-none cursor-pointer"
+                    disabled={savingPost}
+                    onClick={() => savePin(pinDetail?._id)}>
+                        {savingPost ? (
                             <div className="flex items-center gap-2">
-                              <AiTwotoneHeart/>
-                              <span>Save</span>
+                              <div className="animate-spin">
+                                  <AiOutlineLoading3Quarters/>
+                              </div>
+                              <span>Saving..</span>
                             </div>
-                          )
-                      }
-                  </button>
-                )}
+                            ) : (
+                              <div className="flex items-center gap-2">
+                                <AiTwotoneHeart/>
+                                <span>Save</span>
+                              </div>
+                            )
+                        }
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
             <div className="w-full p-5 flex-1 xl:min-w-620">
@@ -390,10 +419,10 @@ function PinDetail() {
                 </p>
                 <p className="mt-3 text-base sm:text-lg">{pinDetail.about}</p>
               </div>
-              <Link href={`${url}/profile/${pinDetail?.posted_by._id}`} className="flex gap-2 mt-5 items-center bg-white rounded-lg">
+              <Link href={`${url}/profile/${pinDetail?.posted_by?._id}`} className="flex gap-2 mt-5 items-center bg-white rounded-lg">
                 <div className="hidden md:flex bg-gradient-to-tr from-yellow-500 to-violet-600 p-0.5 items-center justify-center w-8 sm:w-12 h-8 sm:h-12 relative rounded-full">
                     <div className="relative w-full h-full overflow-hidden rounded-full">
-                        <Image src={`/api/imageproxy?url=${encodeURIComponent(pinDetail?.posted_by.image_url)}`} alt="my-profile" layout="fill" objectFit="cover" />
+                        <Image src={`/api/imageproxy?url=${encodeURIComponent(pinDetail?.posted_by?.image_url)}`} alt="my-profile" layout="fill" objectFit="cover" />
                     </div>
                 </div>
                 <p className="font-semibold sm:text-xl capitalize">

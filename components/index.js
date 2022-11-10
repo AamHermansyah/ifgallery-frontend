@@ -5,6 +5,7 @@ import CreatePin from "./CreatePin";
 import Feed from "./Feed";
 import Navbar from "./Navbar";
 import Search from "./Search";
+import Spinner from "./Spinner";
 
 export {
     Login,
@@ -13,5 +14,6 @@ export {
     CreatePin,
     Feed,
     Navbar,
-    Search
+    Search,
+    Spinner
 }

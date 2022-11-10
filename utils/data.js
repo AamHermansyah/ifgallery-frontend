@@ -11,6 +11,12 @@ export const userQuery = (userId) => {
     return query
 }
 
+export const memberQuery = () => {
+    const query = `*[_type == "user" && role_user == 'admin']`
+
+    return query
+}
+
 export const deletePinQuery = (id) => {
     const query = `*[_id == "${id}"][0]`;
     return query
@@ -106,15 +112,32 @@ export const pinDetailQuery = (pinId) => {
   return query;
 };
 
+export const pinDetailEditQuery = (pinId) => {
+  const query = `*[_type == "pin" && _id == '${pinId}']{
+    image_url,
+    _id,
+    title, 
+    about,
+    category,
+    destination,
+    posted_by -> {
+      _id,
+      username,
+      image_url
+    }
+  }`;
+  return query;
+};
+
 export const pinDetailMorePinQuery = (pin) => {
-  const title = pin.title
+  const type = pin.title
     .toLowerCase()
     .split(" ")
-    .map((str) => `title match "${str}"`)
+    .map((str) => `_type == "pin" && _id != '${pin._id}' && title match "${str}"`)
     .filter((str, index) => index < 4)
     .join(' || ');
 
-  const query = `*[_type == "pin" && _id != '${pin._id}' && ${title}] | order(_createdAt asc) [0...20] {
+  const query = `*[${type}] | order(_createdAt asc) [0...20] {
     image_url,
     _id,
     destination,

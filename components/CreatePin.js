@@ -2,11 +2,12 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/legacy/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AiOutlineCloudDownload, AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { MdDelete } from 'react-icons/md'
 import { client } from '../client';
 import { categories } from '../utils/data';
+import { handleGDImageId } from '../utils/handleGDImageUrl';
 import { truncateName } from '../utils/truncateString';
 import Spinner from './Spinner';
 
@@ -24,18 +25,7 @@ function CreatePin() {
   const router = useRouter();
 
   const {data: session} = useSession();
-  const {user} = session;
-
-  const handleGDImageId = (link) => {
-    const regex = /(d\/[\w|\d|\-\_]+\/)/gi;
-    if(regex.test(link)){
-      const google_drive_image_id = link.match(regex)[0].replace(/^d\/|\//gi, '')
-
-      return `https://drive.google.com/uc?export=view&id=${google_drive_image_id}`;
-    }
-
-    return false;
-  }
+  const { user } = session;
 
   const handleCheckPhotoLink = (link) => {
     const image_url = handleGDImageId(link);
@@ -68,11 +58,10 @@ function CreatePin() {
 
       client.create(doc)
         .then(() => {
-          router.push('/');
+          router.push('/profile/' + user.userId);
         })
-        .catch(err => {
-          alert(err);
-          router.push('/');
+        .catch(() => {
+          router.push('/500');
         })
         .finally(() => {
           setLoading(false);
@@ -87,6 +76,12 @@ function CreatePin() {
       setFields(false);
     }, 4000);
   }
+
+  useEffect(() => {
+    if(user?.role === 'user'){
+      router.push('/');
+    }
+  }, [user]);
 
   return (
     <div className="flex flex-col justify-center items-center mt-5 lg:h-4/5">
