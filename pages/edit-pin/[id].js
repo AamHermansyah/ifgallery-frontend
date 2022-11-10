@@ -12,7 +12,7 @@ import { categories, pinDetailEditQuery } from '../../utils/data';
 import { handleGDImageId } from '../../utils/handleGDImageUrl';
 import { truncateName } from '../../utils/truncateString';
 
-function editPinPage() {
+function EditPinPage() {
     const [pin, setPin] = useState({
         title: '',
         about: '',
@@ -213,4 +213,4 @@ function editPinPage() {
     )
 }
 
-export default editPinPage
+export default EditPinPage
