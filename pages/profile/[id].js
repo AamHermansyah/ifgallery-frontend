@@ -154,13 +154,13 @@ function Profile() {
                 </div>
               )}
           </div>
-          <div className="relative flex items-center flex-col gap-6 -mt-10 sm:-mt-14 w-[90%] sm:w-[80%] bg-white rounded-lg p-6 shadow-sm">
+          <div className="relative flex items-center flex-col gap-6 -mt-10 sm:-mt-14 w-[90%] sm:w-[80%] bg-white rounded-lg pt-8 sm:pt-6 p-6 shadow-sm">
               <div className="absolute top-0 z-1 right-0 p-2">
                 {session?.user?.userId === user?._id && (
                     <Link href={`${url}/edit-profile/${user._id}`}
-                    className="bg-sky-500 text-sm flex gap-2 items-center text-white p-2 px-5 shadow-md outline-none rounded-full">
-                        Edit Profile
-                        <AiOutlineEdit fontSize={16} />
+                    className="bg-sky-500 text-[.7rem] sm:text-sm flex gap-2 items-center text-white py-1 sm:py-2 px-3 sm:px-5 shadow-md outline-none rounded-full">
+                        <span>Edit Profile</span>
+                        <AiOutlineEdit className="text-[.7rem] sm:text-base" />
                     </Link>
                 )}
               </div>
@@ -178,7 +178,7 @@ function Profile() {
                 <p className="text-sky-500 text-lg md:text-xl">{user?.organization_field ? user?.organization_field : 'Guest'}</p>
                 <p className="font-thin max-w-[500px] mx-auto mt-2">
                     {user?.biodata ? user?.biodata : 'Biodata masih kosong kek jomblo aja:('}
-                </p>  
+                </p>
                 <div className="flex gap-3 py-3 justify-center w-full">
                     {user?.social_media?.length > 0 && user.social_media.map(social => (
                       <a href={`${icons[social.title].link}/${social.username}`} 
@@ -226,9 +226,9 @@ function Profile() {
           <div className="bg-gray-50 w-full p-4">
             <MasonryLayout pins={pins} />
           </div> ) : (
-          <div className="flex justify-center font-bold items-center w-full text-xl mt-2 text-gray-800">
+          <div className="bg-gray-50 flex justify-center font-bold items-center w-full text-xl mt-4 sm:mt-8 text-gray-800">
             {loading ? (
-                <div className="animate-pulse mt-4" >Wait a minutes... Who are you?</div>
+                <div className="animate-pulse" >Wait a minutes... Who are you?</div>
           ) : `Masih kosong kek hatinya:(`}
         </div>
       )}
