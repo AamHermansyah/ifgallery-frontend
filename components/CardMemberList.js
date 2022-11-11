@@ -11,7 +11,7 @@ function CardMemberList({user}) {
     const { data: session } = useSession();
 
     return (
-        <div className="relative p-4 flex gap-4 w-full max-w-[350px] h-max bg-white rounded-lg sm:rounded-xl shadow-sm">
+        <div className="relative p-4 flex gap-4 w-full sm:max-w-[350px] h-max bg-white rounded-lg sm:rounded-xl shadow-sm">
             <div className="absolute top-0 z-1 right-0 p-2">
                 {session?.user?.userId === user?._id && (
                     <Link href={`${url}/edit-profile/${user._id}`}
@@ -52,7 +52,7 @@ function CardMemberList({user}) {
                 </div>
             </div>
 
-            <div className="flex-[2]">
+            <div className="flex-[2.5] sm:flex-[2]">
                 <p className="text-sky-500 text-md">
                     {user?.organization_field ? user?.organization_field : 'Guest'}
                 </p>

@@ -237,3 +237,29 @@ export const categories = [
         icon: <BiDotsHorizontal />
     }
 ]
+
+export const socials_media = [
+  { 
+    name: 'facebook', 
+    placeholder: 'Username Facebook' 
+  },
+  { name: 'github', placeholder: 'Username Github' },
+  {
+    name: 'instagram',
+    placeholder: 'Username Instagram'
+  },
+  {
+    name: 'twitter',
+    placeholder: 'Username Twitter'
+  },
+  {
+    name: 'telegram',
+    placeholder: 'Username Telegram'
+  },
+  {
+    name: 'whatsapp',
+    placeholder: 'Nomor Whatsapp'
+  }
+]
+
+export const organization_fields = ['Ketua Kelas', 'Wakil Ketua Kelas', 'Sekertaris', 'Wakil Sekertaris', 'Bendahara', 'Wakil Bendahara', 'Anggota']

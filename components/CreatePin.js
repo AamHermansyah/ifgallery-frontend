@@ -82,7 +82,7 @@ function CreatePin() {
   }, [user]);
 
   return (
-    <div className="flex flex-col justify-center items-center mt-5 lg:h-4/5 p-2 bg-gray-50">
+    <div className="flex flex-col justify-center items-center lg:h-4/5 p-2 bg-gray-50 min-h-screen">
       <div className="flex lg:flex-row flex-col justify-center items-center bg-white lg:p-5 p-3 lg:w-4/5 w-full">
         <div className="bg-secondaryColor p-3 flex flex-0.7 w-full">
           <div className="relative flex justify-center items-center flex-col border-2 border-dotted border-gray-300 p-3 w-full h-[300px] sm:h-420">

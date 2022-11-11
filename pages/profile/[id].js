@@ -19,7 +19,7 @@ import { icons } from '../../components/icons'
 import { addPins } from '../../app/features/pins/pinsSlice'
 
 const activeBtnStyles = 'bg-red-500 text-white font-bold p-2 rounded-full w-24 outline-none';
-const notActiveBtnStyles = 'bg-primary text-black font-bold p-2 rounded-full w-24 outline-none';
+const notActiveBtnStyles = 'bg-primary text-black font-bold p-2 rounded-full w-24 outline-none border-2 border-gray-600';
 
 function Profile() {
   const [user, setUser] = useState(null);
@@ -121,9 +121,10 @@ function Profile() {
       )}
 
       {user && (
-        <main className="flex flex-col items-center pb-10">
-          <div className="relative w-full bg-gradient-to-tr from-violet-800 to-red-500 h-370 2xl:h-510 rounded-b-md">
-              <div className="hidden sm:block relative w-full h-370 2xl:h-510 shadow-lg">
+        <main className="flex flex-col items-center pb-10 bg-gray-50">
+          <div className="w-full bg-gradient-to-tr from-violet-800 to-red-500 rounded-b-md">
+              <div className="relative w-full h-[300px] sm:h-370 2xl:h-510 shadow-lg">
+                <div className="hidden sm:block">
                   <Image src={bannerProfileLandscape}
                   layout="fill"
                   objectFit="cover"
@@ -131,8 +132,8 @@ function Profile() {
                   priority
                   className="opacity-50"
                   />
-              </div>
-              <div className="block sm:hidden relative w-full h-370 2xl:h-510 shadow-lg">
+                </div>
+                <div className="block sm:hidden">
                   <Image src={bannerProfilePotrait}
                   layout="fill"
                   objectFit="cover"
@@ -140,18 +141,20 @@ function Profile() {
                   priority
                   className="opacity-50"
                   />
+                </div>
               </div>
+
               {session?.user?.userId === user?._id && (
-                  <div className="absolute top-0 z-1 right-0 pb-4 sm:pb-0 p-2">
-                      <button
-                      className="bg-white font-bold flex gap-2 items-center text-red-500 p-2 px-5 shadow-md outline-none rounded-full cursor-pointer">
-                          Logout
-                          <AiOutlineLogout fontSize={21} />
-                      </button>
-                  </div>
+                <div className="absolute top-0 z-1 right-0 pb-4 sm:pb-0 p-2">
+                    <button onClick={handleSignOut}
+                    className="bg-white font-bold flex gap-2 items-center text-red-500 p-2 px-5 shadow-md outline-none rounded-full cursor-pointer">
+                        Logout
+                        <AiOutlineLogout fontSize={21} />
+                    </button>
+                </div>
               )}
           </div>
-          <div className="relative flex flex-wrap flex-col md:flex-row gap-4 md:gap-10 -mt-18 sm:-mt-14 w-full sm:w-[80%] bg-white rounded-lg sm:rounded-xl px-4 sm:px-8 py-8 shadow-sm">
+          <div className="relative flex items-center flex-col gap-6 -mt-10 sm:-mt-14 w-[90%] sm:w-[80%] bg-white rounded-lg p-6 shadow-sm">
               <div className="absolute top-0 z-1 right-0 p-2">
                 {session?.user?.userId === user?._id && (
                     <Link href={`${url}/edit-profile/${user._id}`}
@@ -161,7 +164,7 @@ function Profile() {
                     </Link>
                 )}
               </div>
-              <div className="relative w-[150px] sm:w-[200px] h-[150px] sm:h-[200px] rounded-lg bg-violet-400">
+              <div className="relative w-[100px] sm:w-[150px] h-[100px] sm:h-[150px] bg-violet-400 rounded-xl overflow-hidden">
                   <Image src={`/api/imageproxy?url=${encodeURIComponent(user?.image_url)}`}
                   layout="fill"
                   objectFit="cover"
@@ -170,18 +173,18 @@ function Profile() {
                   priority
                   className="shadow-sm"/>
               </div>
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mt-0 sm:mt-4">{user.username}</h1>
-                <p className="text-sky-500 text-lg">{user?.organization_field ? user?.organization_field : 'Guest'}</p>
-                <p className="font-thin mt-4 max-w-[500px]">
+              <div className="w-[80%] sm:w-full text-center">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">{user.username}</h1>
+                <p className="text-sky-500 text-lg md:text-xl">{user?.organization_field ? user?.organization_field : 'Guest'}</p>
+                <p className="font-thin max-w-[500px] mx-auto mt-2">
                     {user?.biodata ? user?.biodata : 'Biodata masih kosong kek jomblo aja:('}
                 </p>  
-                <div className="flex gap-3 py-3">
-                    {user?.social_media.length > 0 && user.social_media.map(social => (
+                <div className="flex gap-3 py-3 justify-center w-full">
+                    {user?.social_media?.length > 0 && user.social_media.map(social => (
                       <a href={`${icons[social.title].link}/${social.username}`} 
                       target="blank" 
-                      rel="noreferrer" 
-                      className="relative w-[27px] h-[27px] transition-all duration-150 grayscale hover:grayscale-0"
+                      rel="noreferrer"
+                      className="relative w-[20px] h-[20px] sm:w-[27px] sm:h-[27px]"
                       key={social._key}>
                         <Image 
                         src={icons[social.title].icon} 
@@ -197,7 +200,7 @@ function Profile() {
           </div>
         </main>
       )}
-      <div className="text-center">
+      <div className="text-center bg-gray-50">
         <button 
         type="button"
         onClick={e => {

@@ -1,3 +1,4 @@
+import { useSession } from 'next-auth/react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
@@ -6,12 +7,12 @@ import { Spinner } from '../../components';
 import CardMemberList from '../../components/CardMemberList'
 import Navigation from '../../container/Navigation'
 import { memberQuery } from '../../utils/data';
-import { randomImage } from '../../utils/randomImageUrl'
 
 function MemberListPage() {
     const [member, setMember] = useState(null);
-    const randomImageUrl = randomImage();
     const router = useRouter();
+
+    const {data: session} = useSession();
 
     useEffect(() => {
         const controller = new AbortController();
@@ -40,8 +41,8 @@ function MemberListPage() {
             </Head>
 
             <Navigation>
-                <section className="min-h-screen px-2 py-4 md:p-6 bg-[#9FC1FF]">
-                    <div className="flex flex-wrap justify-center items-center gap-4 md:gap-6 ">
+                <section className="min-h-screen bg-[#9FC1FF]">
+                    <div className="w-full flex flex-wrap justify-center items-center gap-4 p-4">
                         {!member ? (
                             <>
                                 <div className="bg-white w-full h-[150px] p-4 rounded-lg max-w-[350px]"> <Spinner/> </div>
