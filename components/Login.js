@@ -13,7 +13,9 @@ function Login() {
   const [loadingButton, setLoadingButton] = useState(false);
 
   useEffect(() => {
-    setLoadingButton(false);
+    return () => {
+      setLoadingButton(false);
+    }
   }, []);
 
   if(status === "loading"){

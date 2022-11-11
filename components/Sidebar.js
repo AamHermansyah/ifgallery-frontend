@@ -70,7 +70,7 @@ function Sidebar({user}) {
                   <Image src={`/api/imageproxy?url=${encodeURIComponent(user.image)}`} alt="my-profile" layout="fill" objectFit="cover" />
               </div>
             </div>
-            <p className="ml-2">{truncateName(user.name)}</p>
+            <p className="ml-2 capitalize">{truncateName(user.name)}</p>
           </Link>
         )}
         {user?.role === 'admin' && (

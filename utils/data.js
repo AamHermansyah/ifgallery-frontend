@@ -226,7 +226,7 @@ export const categories = [
     },
     {
         name: 'Kegiatan',
-        icon: <GrWorkshop />
+        icon: <GrWorkshop className="opacity-70 hover:bg-opacity-100" />
     },
     {
         name: 'Sendiri aja',

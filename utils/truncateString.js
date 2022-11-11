@@ -1,4 +1,8 @@
 export function truncateName(string){
-    string = string.split(' ').map((str, index) => index > 1 ? `${str[0]}.` : str);
-    return string.join(' ')
+    string = string.replace(/(\s\d+)/gi, '')
+        .split(' ')
+        .map((str, index) => index > 1 ? `${str[0]}.` : str)
+        .join(' ')
+        .toLowerCase();
+    return string
 }

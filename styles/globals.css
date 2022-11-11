@@ -12,6 +12,10 @@ body, ::placeholder {
     font-family: 'Josefin Sans', sans-serif;
 }
 
+body {
+    @apply bg-gray-50;
+}
+
 .pin-img {
     @apply object-contain;
     width: 100% !important;

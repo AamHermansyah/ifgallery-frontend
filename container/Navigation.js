@@ -23,6 +23,7 @@ function Navigation({children}) {
             const timeout = setTimeout(() => {
                 setLoadingScreen(false);
             }, 2000);
+
             return () => {
                 clearTimeout(timeout);
                 setLoadingScreen(true);
@@ -75,7 +76,7 @@ function Navigation({children}) {
                     </div>
                 </div>
             )}
-        <div className="relative w-full bg-gray-50">{children}</div>
+        <div className="relative w-full">{children}</div>
     </div>
   )
 }

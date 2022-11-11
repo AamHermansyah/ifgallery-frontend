@@ -1,10 +1,8 @@
 import { useSession } from 'next-auth/react';
 import Image from 'next/legacy/image';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
-import { AiOutlineCloudDownload, AiOutlineLoading3Quarters } from 'react-icons/ai'
-import { MdDelete } from 'react-icons/md'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { client } from '../client';
 import { categories } from '../utils/data';
 import { handleGDImageId } from '../utils/handleGDImageUrl';
@@ -84,7 +82,7 @@ function CreatePin() {
   }, [user]);
 
   return (
-    <div className="flex flex-col justify-center items-center mt-5 lg:h-4/5">
+    <div className="flex flex-col justify-center items-center mt-5 lg:h-4/5 p-2 bg-gray-50">
       <div className="flex lg:flex-row flex-col justify-center items-center bg-white lg:p-5 p-3 lg:w-4/5 w-full">
         <div className="bg-secondaryColor p-3 flex flex-0.7 w-full">
           <div className="relative flex justify-center items-center flex-col border-2 border-dotted border-gray-300 p-3 w-full h-[300px] sm:h-420">
