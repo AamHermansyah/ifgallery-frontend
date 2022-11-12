@@ -177,7 +177,7 @@ function Profile() {
                 <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">{user.username}</h1>
                 <p className="text-sky-500 text-lg md:text-xl">{user?.organization_field ? user?.organization_field : 'Guest'}</p>
                 <p className="font-thin max-w-[500px] mx-auto mt-2" style={{whiteSpace: 'pre-line'}}>
-                    {user?.biodata ? user?.biodata : 'Biodata masih kosong kek jomblo aja:('}
+                    {user?.biodata ? user?.biodata : 'Biodata masih kosong😥'}
                 </p>
                 <div className="flex gap-3 py-3 justify-center w-full">
                     {user?.social_media?.length > 0 && user.social_media.map(social => (
@@ -211,6 +211,7 @@ function Profile() {
         className={`${activeBtn === 'created' ? activeBtnStyles : notActiveBtnStyles} cursor-pointer`}>
         Created
         </button>
+        
         <button 
         type="button"
         onClick={e => {

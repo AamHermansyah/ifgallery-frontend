@@ -40,9 +40,12 @@ function CreatePin() {
 
     const isValidImage_url = /^(http:\/\/|https:\/\/)/gi.test(link);
     if(!isValidImage_url){
+      setImage_url(link);
+      setCekImageStatus(false);
       setErrorMessageCekImage('Silahkan masukan input dengan benar!');
       return
     }
+
     setImage_url(link);
     setCekImageStatus(true);
     setErrorMessageCekImage(false);
@@ -59,20 +62,32 @@ function CreatePin() {
         social_media[title]?.username !== '' 
         &&
         socialMediaArray.push({
-          title: title, username: social_media[title].username, user_id: userData?._id, _key: uuidv4()
+          title: title, 
+          username: title === "whatsapp" ? social_media[title].username.replace(/^(0|(?=8)|(\+62))/gi, '62') : social_media[title].username,
+          user_id: userData?._id, 
+          _key: uuidv4()
         });
       }
 
       socialMediaArray = socialMediaArray?.length > 0 ? socialMediaArray : null;
 
+      let doc = { 
+        username: username.trim(),
+        biodata: biodata.trim(),
+        organization_field: !organization_field ? 'Guest' : organization_field, biodata, 
+        image_url 
+      }
+
+      if(socialMediaArray !== null){
+        doc = {
+          ...doc,
+          social_media: socialMediaArray
+        }
+      }
+
       client
         .patch(userData._id)
-        .set({ username,
-          biodata: biodata.trim(),
-          organization_field: !organization_field ? 'Guest' : organization_field, biodata, 
-          social_media: socialMediaArray, 
-          image_url 
-        })
+        .set(doc)
         .commit()
         .then(() => {
           router.push('/profile/' + userData._id);
@@ -152,13 +167,13 @@ function CreatePin() {
                 {typeof errorMessageCekImage === 'boolean' ? (
                     <Image 
                     src={`/api/imageproxy?url=${encodeURIComponent(image_url)}`} 
-                    alt="Pin photo" 
+                    alt="Photo profile" 
                     layout="fill" 
-                    objectFit="contain" 
+                    objectFit="cover"
                     onError={e => setErrorMessageCekImage('Link error gambar tidak bisa dimuat:(')}
                     onLoad={e => setCekImageStatus(false)}
                     /> ) : (
-                    <p className="text-red-500 text-center text-sm sm:text-base">{errorMessageCekImage}</p>
+                      <p className="text-red-500 text-center text-sm sm:text-base">{errorMessageCekImage}</p>
                     )}
                   </div>
                 </div>

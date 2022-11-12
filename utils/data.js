@@ -262,4 +262,4 @@ export const socials_media = [
   }
 ]
 
-export const organization_fields = ['Ketua Kelas', 'Wakil Ketua Kelas', 'Sekertaris', 'Wakil Sekertaris', 'Bendahara', 'Wakil Bendahara', 'Anggota']
+export const organization_fields = ['Ketua Kelas', 'Wakil Ketua Kelas', 'Sekertaris', 'Wakil Sekertaris', 'Bendahara', 'Wakil Bendahara', 'Anggota', 'Maker', 'Guest'];
