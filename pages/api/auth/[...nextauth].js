@@ -31,6 +31,7 @@ export default NextAuth({
           try {
             const res  = await client.createIfNotExists(doc);
             session.user.role = res.role_user;
+            session.user.image = res.image_url
           } catch (error) {
             session.error = "Terjadi error di server." 
           }

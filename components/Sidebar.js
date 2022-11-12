@@ -26,6 +26,9 @@ function Sidebar({user}) {
       case '/member-list':
         setNavigationActive('member-list')
         break
+      default:
+        setNavigationActive('home');
+        break
     }
   }, [categoryId, router.pathname])
 
