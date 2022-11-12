@@ -38,7 +38,7 @@ function CardMemberList({user}) {
                         <a href={`${icons[social.title].link}/${social.username}`} 
                         target="blank" 
                         rel="noreferrer" 
-                        className="relative w-[20px] h-[20px] transition-all duration-150 grayscale hover:grayscale-0"
+                        className="relative w-[20px] h-[20px] transition-all duration-150"
                         key={social._key}>
                         <Image 
                         src={icons[social.title].icon} 
@@ -59,8 +59,8 @@ function CardMemberList({user}) {
                 <Link href={`${url}/profile/${user._id}`} className="text-xl font-bold text-gray-800 capitalize">
                     {truncateName(user.username)}
                 </Link>
-                <p className="font-thin text-sm">
-                    {user?.biodata ? user?.biodata : 'Biodata masih kosong kek jomblo aja:('}
+                <p className="font-thin text-sm" style={{whiteSpace: 'pre-line'}}>
+                    {user?.biodata ? user?.biodata : 'Biodata masih kosong😥'}
                 </p>
             </div>
         </div>

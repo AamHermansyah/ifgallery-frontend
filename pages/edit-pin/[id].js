@@ -52,7 +52,7 @@ function EditPinPage() {
     
             client
                 .patch(pin._id)
-                .set({ title, about, image_url, destination, category})
+                .set({ title, about: about.trim(), image_url, destination, category})
                 .commit()
                 .then(() => {
                     router.push('/pin-detail/' + pin._id);
@@ -166,12 +166,12 @@ function EditPinPage() {
                                     <p className="ml-2 font-bold">{truncateName(pin?.posted_by?.username)}</p>
                                     </div>
                                 )}
-                                <input
+                                <textarea
                                 type="text"
                                 value={about}
                                 onChange={e => setPin(prev => ({ ...prev, about: e.target.value  }))}
                                 placeholder="Deskripsikan dong poto pin kece mu itu hehe"
-                                className="outline-none text-base sm:text-lg border-b-2 border-gray-200 p-2"
+                                className="outline-none text-base sm:text-lg border-2 border-gray-200 p-2 h-[200px] sm:h-[300px]"
                                 />
                                 <div className="flex flex-col">
                                     <div>

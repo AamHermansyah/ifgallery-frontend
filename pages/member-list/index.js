@@ -12,8 +12,6 @@ function MemberListPage() {
     const [member, setMember] = useState(null);
     const router = useRouter();
 
-    const {data: session} = useSession();
-
     useEffect(() => {
         const controller = new AbortController();
         const signal = controller.signal;
@@ -43,17 +41,70 @@ function MemberListPage() {
             <Navigation>
                 <section className="min-h-screen bg-[#9FC1FF]">
                     <div className="w-full flex flex-wrap justify-center items-center gap-4 p-4">
-                        {!member ? (
+                        {!member && (
                             <>
                                 <div className="bg-white w-full h-[150px] p-4 rounded-lg max-w-[350px]"> <Spinner/> </div>
                                 <div className="bg-white w-full h-[150px] p-4 rounded-lg max-w-[350px]"> <Spinner/> </div>
                                 <div className="bg-white w-full h-[150px] p-4 rounded-lg max-w-[350px]"> <Spinner/> </div>
                             </>
-                        ) : (
-                            member.map((user) => (
-                                <CardMemberList user={user} key={user._id} />
-                            ))
                         )}
+
+                        {member && member
+                        .filter(user => user.organization_field === 'Maker')
+                        .map((user) => (
+                            <CardMemberList user={user} key={user._id} />
+                        ))}
+
+                        {member && member
+                        .filter(user => user.organization_field === 'Ketua Kelas')
+                        .map((user) => (
+                            <CardMemberList user={user} key={user._id} />
+                        ))}
+
+                        {member && member
+                        .filter(user => user.organization_field === 'Wakil Ketua Kelas')
+                        .map((user) => (
+                            <CardMemberList user={user} key={user._id} />
+                        ))}
+
+                        {member && member
+                        .filter(user => user.organization_field === 'Sekertaris')
+                        .map((user) => (
+                            <CardMemberList user={user} key={user._id} />
+                        ))}
+
+                        {member && member
+                        .filter(user => user.organization_field === 'Wakil Sekertaris')
+                        .map((user) => (
+                            <CardMemberList user={user} key={user._id} />
+                        ))}
+
+                        {member && member
+                        .filter(user => user.organization_field === 'Bendahara')
+                        .map((user) => (
+                            <CardMemberList user={user} key={user._id} />
+                        ))}
+
+                        {member && member
+                        .filter(user => user.organization_field === 'Wakil Bendahara')
+                        .map((user) => (
+                            <CardMemberList user={user} key={user._id} />
+                        ))}
+
+                        {member && member
+                        .filter(user => {
+                            const { organization_field: field } = user;
+                            const otherFilterUser = 
+                                field !== 'Maker' && field !== 'Ketua Kelas' && 
+                                field !== 'Wakil Ketua Kelas' && field !== "Sekertaris" &&
+                                field !== 'Wakil Sekertaris' && field !== "Bendahara" &&
+                                field !== "Wakil Bendahara";
+
+                            return otherFilterUser;
+                        })
+                        .map((user) => (
+                            <CardMemberList user={user} key={user._id} />
+                        ))}
                     </div>
                 </section>
             </Navigation>

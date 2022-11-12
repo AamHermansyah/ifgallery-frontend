@@ -43,7 +43,7 @@ function CreatePin() {
       const doc = {
         _type: 'pin',
         title,
-        about,
+        about: about.trim(),
         destination,
         image_url,
         user_id: user.userId,
@@ -134,12 +134,12 @@ function CreatePin() {
               <p className="ml-2 font-bold">{truncateName(user.name)}</p>
             </div>
           )}
-          <input
+          <textarea
           type="text"
           value={about}
           onChange={e => setAbout(e.target.value)}
           placeholder="Deskripsikan dong poto pin kece mu itu hehe"
-          className="outline-none text-base sm:text-lg border-b-2 border-gray-200 p-2"
+          className="outline-none text-base sm:text-lg border-2 border-gray-200 p-2 h-[200px] sm:h-[300px]"
           />
           <div className="flex flex-col">
             <div>

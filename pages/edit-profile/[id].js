@@ -67,7 +67,12 @@ function CreatePin() {
 
       client
         .patch(userData._id)
-        .set({ username, biodata, organization_field: !organization_field ? 'Guest' : organization_field, biodata, social_media: socialMediaArray, image_url})
+        .set({ username,
+          biodata: biodata.trim(),
+          organization_field: !organization_field ? 'Guest' : organization_field, biodata, 
+          social_media: socialMediaArray, 
+          image_url 
+        })
         .commit()
         .then(() => {
           router.push('/profile/' + userData._id);

@@ -417,7 +417,7 @@ function PinDetail() {
                 <p className="text-gray-500 text-sm">
                   {`${getHoursAndMinutes(pinDetail._createdAt)} ${getDateWithDayName(pinDetail._createdAt)}`}
                 </p>
-                <p className="mt-3 text-base sm:text-lg">{pinDetail.about}</p>
+                <p className="mt-3 text-base sm:text-lg" style={{whiteSpace: 'pre-line'}}>{pinDetail.about}</p>
               </div>
               <Link href={`${url}/profile/${pinDetail?.posted_by?._id}`} className="flex gap-2 mt-5 items-center bg-white rounded-lg">
                 <div className="hidden md:flex bg-gradient-to-tr from-yellow-500 to-violet-600 p-0.5 items-center justify-center w-8 sm:w-12 h-8 sm:h-12 relative rounded-full">
@@ -458,7 +458,7 @@ function PinDetail() {
                              <button 
                              onClick={e => {
                                setIdCommentForDelete(comment._key);
-                               setAlertDeleteDisplay(true);
+                               setAlertDeleteCommentDisplay(true);
                              }}
                              type="button" 
                              className="text-red-600">

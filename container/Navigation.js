@@ -54,7 +54,7 @@ function Navigation({children}) {
                     className="cursor-pointer"
                     onClick={() => setToggleSidebar(true)}
                     />
-                    <Link href={url} className="text-xl text-blue-900 ml-4 font-extrabold">
+                    <Link href={url} className="text-xl text-blue-900 ml-4 font-extrabold outline-none">
                         Forgematics A
                     </Link>
                 </div>
