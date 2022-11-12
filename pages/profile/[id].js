@@ -227,7 +227,7 @@ function Profile() {
           <div className="bg-gray-50 w-full p-4">
             <MasonryLayout pins={pins} />
           </div> ) : (
-          <div className="bg-gray-50 flex justify-center font-bold items-center w-full text-xl mt-4 sm:mt-8 text-gray-800">
+          <div className="bg-gray-50 flex justify-center font-bold items-center w-full text-xl py-4 sm:py-8 text-gray-800">
             {loading ? (
                 <div className="animate-pulse" >Wait a minutes... Who are you?</div>
           ) : `Masih kosong kek hatinya:(`}
