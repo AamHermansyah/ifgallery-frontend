@@ -53,12 +53,15 @@ function CardMemberList({user}) {
             </div>
 
             <div className="flex-[2.5] sm:flex-[2]">
-                <p className="text-sky-500 text-md">
+                <p className="text-sky-500 text-md font-bold">
                     {user?.organization_field ? user?.organization_field : 'Guest'}
                 </p>
-                <Link href={`${url}/profile/${user._id}`} className="text-xl font-bold text-gray-800 capitalize">
+                <Link href={`${url}/profile/${user._id}`} className="text-xl font-bold text-gray-800 capitalize leading-3">
                     {truncateName(user.username)}
                 </Link>
+                <p className={`${user?.surname ? 'mb-1 -mt-1' : ''} text-red-500 text-sm font-bold`}>
+                   {user?.surname ? `a.k ${user?.surname}` : ''}
+                </p>
                 <p className="font-thin text-sm" style={{whiteSpace: 'pre-line'}}>
                     {user?.biodata ? user?.biodata : 'Biodata masih kosong😥'}
                 </p>

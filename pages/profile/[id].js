@@ -174,8 +174,11 @@ function Profile() {
                   className="shadow-sm"/>
               </div>
               <div className="w-[80%] sm:w-full text-center">
+                <p className="text-sky-500 text-xl md:text-2xl font-bold mb-1">{user?.organization_field ? user?.organization_field : 'Guest'}</p>
                 <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">{user.username}</h1>
-                <p className="text-sky-500 text-lg md:text-xl">{user?.organization_field ? user?.organization_field : 'Guest'}</p>
+                <p className={`${user?.surname ? '-mt-1' : ''} text-red-500 text-base sm:text-lg font-bold`}>
+                   {user?.surname ? `${user?.surname}` : ''}
+                </p>
                 <p className="font-thin max-w-[500px] mx-auto mt-2" style={{whiteSpace: 'pre-line'}}>
                     {user?.biodata ? user?.biodata : 'Biodata masih kosong😥'}
                 </p>

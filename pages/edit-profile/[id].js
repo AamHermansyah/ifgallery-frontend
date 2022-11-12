@@ -14,6 +14,7 @@ import { handleGDImageId } from '../../utils/handleGDImageUrl';
 function CreatePin() {
   const [userData, setUserData] = useState(null);
   const [username, setUsername] = useState('');
+  const [surname, setSurname] = useState('');
   const [biodata, setBiodata] = useState('');
   const [organization_field, setOrganization_field] = useState('');
   const [social_media, setSocial_media] = useState({});
@@ -69,20 +70,13 @@ function CreatePin() {
         });
       }
 
-      socialMediaArray = socialMediaArray?.length > 0 ? socialMediaArray : null;
-
       let doc = { 
         username: username.trim(),
         biodata: biodata.trim(),
         organization_field: !organization_field ? 'Guest' : organization_field, biodata, 
-        image_url 
-      }
-
-      if(socialMediaArray !== null){
-        doc = {
-          ...doc,
-          social_media: socialMediaArray
-        }
+        image_url ,
+        social_media: socialMediaArray,
+        surname
       }
 
       client
@@ -125,6 +119,7 @@ function CreatePin() {
               setBiodata(data[0].biodata);
               setOrganization_field(data[0].organization_field);
               setImage_url(data[0].image_url);
+              data[0]?.surname && setSurname(data[0].surname);
               if(data[0].social_media){
                 setSocial_media(data[0].social_media.reduce((initital, current) => ({
                   ...initital,
@@ -190,6 +185,13 @@ function CreatePin() {
                   value={username}
                   type="text"
                   placeholder="Nama lengkap"
+                  className="outline-none text-base sm:text-lg border-b-2 border-gray-200 p-2"
+                  />
+                  <input
+                  onChange={e => setSurname(e.target.value)}
+                  value={surname}
+                  type="text"
+                  placeholder="Julukan/A.K/Panggilan (optional)"
                   className="outline-none text-base sm:text-lg border-b-2 border-gray-200 p-2"
                   />
                 </div>
