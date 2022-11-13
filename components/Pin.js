@@ -25,17 +25,19 @@ function Pin({pin, onDelete}) {
     const [alreadySaved, setAlreadySaved] = useState(false);
 
     const {data: session} = useSession();
-    const { user } = session;
+    const user = session?.user;
 
     const router = useRouter();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        setAlreadySaved(!!(pin?.save?.filter(item => item.posted_by?._id === user.userId))?.length);
-    }, []);
+        if(user){
+            setAlreadySaved(!!(pin?.save?.filter(item => item.posted_by?._id === user.userId))?.length);
+        }
+    }, [user]);
 
     const savePin = (id) => {
-        if(!alreadySaved){
+        if(!alreadySaved && user){
             setSavingPost(true);
 
             client
@@ -65,7 +67,7 @@ function Pin({pin, onDelete}) {
 
     const unsavePin = (pin) => {
         const key = pin.save.find(res => res.posted_by._id === user.userId)?._key;
-        if(key){
+        if(key && user){
             setUnsavingPost(true);
             const query = unsaveQuery(key);
 
@@ -113,80 +115,84 @@ function Pin({pin, onDelete}) {
                 <div
                 className={`${cardActionDisplay ? 'flex' : 'hidden'} absolute inset-0 flex-col justify-between p-1 pr-2 py-2 z-50`}>
                     <div className="flex gap-2 justify-between">
-                        <a
-                        href={pin?.image_url?.replace('=view', '=download')}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="bg-white h-9 w-9 rounded-full flex items-center justify-center text-dark text-xl opacity-75 hover:opacity-100 hover:shadow-md outline-none hover:cursor-pointer"
-                        onClick={e => e.stopPropagation()}
-                        >
-                            <MdDownloadForOffline />
-                        </a>
+                        {user && (
+                            <a
+                            href={pin?.image_url?.replace('=view', '=download')}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="bg-white h-9 w-9 rounded-full flex items-center justify-center text-dark text-xl opacity-75 hover:opacity-100 hover:shadow-md outline-none hover:cursor-pointer"
+                            onClick={e => e.stopPropagation()}
+                            >
+                                <MdDownloadForOffline />
+                            </a>
+                        )}
                         <div className="bg-gradient-to-tr from-pink-500 to-yellow-500 flex items-center opacity-70 hover:opacity-100 text-white font-bold px-5 py-1 text-base rounded-3xl hover:shadow-md outline-none cursor-default">
                             {pin?.save ? pin?.save.length : '0'} Saved
                         </div>
                     </div>
-                    <div className="flex justify-between items-center gap-2 w-full">
-                        {pin?.image_url && (
-                            <a
-                            href={pin?.image_url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="bg-white flex items-center gap-2 text-black font-bold p-2 px-4 rounded-full opacity-70 hover:opacity-100 hover:shadow-md hover:cursor-pointer"
-                            onClick={e => e.stopPropagation()}
-                            >
-                                <BsFillArrowRightCircleFill />
-                                {pin.destination.length > 20 ? pin?.destination.slice(8, 20) : pin?.destination.slice(8)}
-                            </a>
-                        )}
-                        <div className="flex gap-2 items-center flex-wrap">
-                            {alreadySaved ? (
-                                <button 
-                                type="button" 
-                                className="bg-white text-red-500 p-2 opacity-70 hover:opacity-100 font-bold text-base rounded-3xl hover:shadow-md outline-none cursor-pointer"
-                                disabled={unsavingPost}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    unsavePin(pin);
-                                }}>
-                                    {unsavingPost ? (
-                                        <div className="animate-spin">
-                                            <AiOutlineLoading3Quarters />
-                                        </div>
-                                        ) : <AiTwotoneHeart />
-                                    }
-                                </button>
-                                ) : (
-                                <button 
-                                type="button" 
-                                className="bg-gradient-to-tr from-pink-500 to-yellow-500 p-2 opacity-70 hover:opacity-100 text-white font-bold text-base rounded-3xl hover:shadow-md outline-none cursor-pointer"
-                                disabled={savingPost}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    savePin(pin._id)
-                                }}>
-                                    {savingPost ? (
-                                        <div className="animate-spin">
-                                            <AiOutlineLoading3Quarters />
-                                        </div>
-                                        ) : <AiTwotoneHeart />
-                                    }
-                                </button>
+                    {user && (
+                        <div className="flex justify-between items-center gap-2 w-full">
+                            {pin?.image_url && (
+                                <a
+                                href={pin?.image_url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="bg-white flex items-center gap-2 text-black font-bold p-2 px-4 rounded-full opacity-70 hover:opacity-100 hover:shadow-md hover:cursor-pointer"
+                                onClick={e => e.stopPropagation()}
+                                >
+                                    <BsFillArrowRightCircleFill />
+                                    {pin.destination.length > 20 ? pin?.destination.slice(8, 20) : pin?.destination.slice(8)}
+                                </a>
                             )}
-                            
-                            {pin?.posted_by._id === user.userId && (
-                                <button 
-                                type="button" 
-                                className="bg-red-500 p-2 opacity-70 hover:opacity-100 text-white font-bold text-base rounded-3xl hover:shadow-md outline-none cursor-pointer"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onDelete(pin._id);
-                                }}>
-                                    <AiTwotoneDelete />
-                                </button>
-                            )}
+                            <div className="flex gap-2 items-center flex-wrap">
+                                {alreadySaved ? (
+                                    <button 
+                                    type="button" 
+                                    className="bg-white text-red-500 p-2 opacity-70 hover:opacity-100 font-bold text-base rounded-3xl hover:shadow-md outline-none cursor-pointer"
+                                    disabled={unsavingPost}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        unsavePin(pin);
+                                    }}>
+                                        {unsavingPost ? (
+                                            <div className="animate-spin">
+                                                <AiOutlineLoading3Quarters />
+                                            </div>
+                                            ) : <AiTwotoneHeart />
+                                        }
+                                    </button>
+                                    ) : (
+                                    <button 
+                                    type="button" 
+                                    className="bg-gradient-to-tr from-pink-500 to-yellow-500 p-2 opacity-70 hover:opacity-100 text-white font-bold text-base rounded-3xl hover:shadow-md outline-none cursor-pointer"
+                                    disabled={savingPost}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        savePin(pin._id)
+                                    }}>
+                                        {savingPost ? (
+                                            <div className="animate-spin">
+                                                <AiOutlineLoading3Quarters />
+                                            </div>
+                                            ) : <AiTwotoneHeart />
+                                        }
+                                    </button>
+                                )}
+                                
+                                {pin?.posted_by._id === user.userId && (
+                                    <button 
+                                    type="button" 
+                                    className="bg-red-500 p-2 opacity-70 hover:opacity-100 text-white font-bold text-base rounded-3xl hover:shadow-md outline-none cursor-pointer"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onDelete(pin._id);
+                                    }}>
+                                        <AiTwotoneDelete />
+                                    </button>
+                                )}
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
             <Link href={`${url}/pin-detail/${pin._id}`} className="block mb-2 p-1 text-lg font-bold">

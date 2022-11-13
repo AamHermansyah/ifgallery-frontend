@@ -36,7 +36,7 @@ function Profile() {
 
   const handleSignOut = () => {
     signOut();
-    router.push('/login');
+    router.push('/');
   }
 
   useEffect(() => {
@@ -121,8 +121,8 @@ function Profile() {
       )}
 
       {user && (
-        <main className="flex flex-col items-center pb-10 bg-gray-50">
-          <div className="w-full bg-gradient-to-tr from-violet-800 to-red-500 rounded-b-md">
+        <main className="flex flex-col items-center pb-10 bg-gray-50 md:px-4">
+          <div className="w-full bg-gradient-to-tr from-violet-800 to-red-500 rounded-b-md overflow-hidden">
               <div className="relative w-full h-[300px] sm:h-370 2xl:h-510 shadow-lg">
                 <div className="hidden sm:block">
                   <Image src={bannerProfileLandscape}

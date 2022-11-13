@@ -10,7 +10,7 @@ function Navbar() {
   const [searchTerm, setSearchTerm] = useState('');
   const router = useRouter();
   const { data: session } = useSession();
-  const { user } = session;
+  const user = session?.user;
 
   return (
     <div className="flex gap-2 md:gap-5 w-full mt-5 pb-7">
@@ -34,18 +34,20 @@ function Navbar() {
           </button>
         </form>
       </div>
-      <div className="flex gap-3">
-        <Link href={`${url}/profile/${user.userId}`} className="hidden md:flex bg-gradient-to-tr from-pink-500 to-blue-600 p-0.5 items-center justify-center w-12 h-12 relative rounded-full">
-          <div className="relative w-full h-full overflow-hidden rounded-full">
-              <Image src={`/api/imageproxy?url=${encodeURIComponent(user.image)}`} alt="my-profile" layout="fill" objectFit="cover" />
-          </div>
-        </Link>
-        {user?.role === 'admin' && (
-          <Link href={`${url}/create-pin`} className="hidden md:flex bg-gradient-to-tr from-pink-500 to-blue-600 text-white shadow-md rounded-lg w-12 h-12 justify-center items-center">
-            <IoMdAdd fontSize={25} />
+      {user && (
+        <div className="flex gap-3">
+          <Link href={`${url}/profile/${user.userId}`} className="hidden md:flex bg-gradient-to-tr from-pink-500 to-blue-600 p-0.5 items-center justify-center w-12 h-12 relative rounded-full">
+            <div className="relative w-full h-full overflow-hidden rounded-full">
+                <Image src={`/api/imageproxy?url=${encodeURIComponent(user.image)}`} alt="my-profile" layout="fill" objectFit="cover" />
+            </div>
           </Link>
-        )}
-      </div>
+          {user?.role === 'admin' && (
+            <Link href={`${url}/create-pin`} className="hidden md:flex bg-gradient-to-tr from-pink-500 to-blue-600 text-white shadow-md rounded-lg w-12 h-12 justify-center items-center">
+              <IoMdAdd fontSize={25} />
+            </Link>
+          )}
+        </div>
+      )}
     </div>
   )
 }
