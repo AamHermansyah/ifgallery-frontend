@@ -64,7 +64,7 @@ function CreatePin() {
         &&
         socialMediaArray.push({
           title: title, 
-          username: title === "whatsapp" ? social_media[title].username.replace(/^(0|(?=8)|(\+62))/gi, '62') : social_media[title].username,
+          username: title === "whatsapp" ? social_media[title].username.replace(/^(0|(?=8)|(\+62))/gi, '62').trim() : social_media[title].username.trim(),
           user_id: userData?._id, 
           _key: uuidv4()
         });

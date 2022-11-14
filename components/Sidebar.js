@@ -65,7 +65,7 @@ function Sidebar({user, isNavbar}) {
           </div>
         </div>
         <div>
-          {user && (
+          {user ? (
             <Link href={`${url}/profile/${user.userId}`} className="flex items-center my-4">
               <div className="bg-gradient-to-tr from-pink-500 to-blue-600 p-0.5 flex items-center justify-center w-10 h-10 relative rounded-full">
                 <div className="relative w-full h-full overflow-hidden rounded-full">
@@ -74,15 +74,15 @@ function Sidebar({user, isNavbar}) {
               </div>
               <p className="ml-2 capitalize">{truncateName(user.name)}</p>
             </Link>
+          ) : (
+            <Link href={`${url}/login`} className="max-w-[180px] py-2 opacity-100 hover:shadow-md hover:opacity-80 flex bg-gradient-to-tr from-pink-500 to-blue-600 text-white font-bold shadow-md rounded-lg justify-center items-center transition-all duration-200">
+                Login
+            </Link>
           )}
+          
           {user?.role === 'admin' && (
             <Link href={`${url}/create-pin`} className="max-w-[180px] py-2 opacity-100 hover:shadow-md hover:opacity-80 flex md:hidden bg-gradient-to-tr from-pink-500 to-blue-600 text-white font-bold shadow-md rounded-lg justify-center items-center transition-all duration-200">
                 Buat Pin
-            </Link>
-          )}
-          {!user && (
-            <Link href={`${url}/login`} className="max-w-[180px] py-2 opacity-100 hover:shadow-md hover:opacity-80 flex bg-gradient-to-tr from-pink-500 to-blue-600 text-white font-bold shadow-md rounded-lg justify-center items-center transition-all duration-200">
-                Login
             </Link>
           )}
         </div>

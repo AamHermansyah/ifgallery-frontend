@@ -1,7 +1,7 @@
 import Image from 'next/legacy/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { BsFillArrowRightCircleFill } from 'react-icons/bs';
 import { MdDownloadForOffline, MdOutlineAutoDelete } from 'react-icons/md'
 import { GrSend } from 'react-icons/gr'
@@ -25,7 +25,6 @@ import DeletePinDetail from '../../components/DeletePinDetail';
 function PinDetail() {
   const [acpectImageType, setAcpectImageType] = useState('square');
   const [pinDetail, setPinDetail] = useState(null);
-  const [comment, setComment] = useState('');
   const [addingComment, setAddingComment] = useState(false);
   const [loading, setLoading] = useState(true);
   const [errorCommentDisplay, setErrorCommentDisplay] = useState(false);
@@ -52,12 +51,14 @@ function PinDetail() {
   const dispatch = useDispatch();
   const pins = useSelector(state => state.pins);
 
+  // ref
+  const commentRef = useRef(null);
+
   const fetchPinDetail = (signal) => {
     let queryFetch = pinDetailQuery(id);
     if(queryFetch){
       client.fetch(queryFetch)
       .then(data => {
-
         if(data[0]){
           setPinDetail(data[0]);
           // queryFetch = pinDetailMorePinQuery(data[0]);
@@ -175,8 +176,13 @@ function PinDetail() {
   // add comment
   const handleAddComment = (event) => {
     event.preventDefault();
+
     if(!user) return;
-    if(comment.length < 3) {
+
+    const comment = commentRef.current.innerText.trim().replace(/(\n\n\n+)/igm, '\n\n');
+
+    if(commentRef.current.textContent  < 3 || errorCommentDisplay) {
+      console.log(comment);
       setErrorCommentDisplay(true);
       return;
     };
@@ -216,7 +222,7 @@ function PinDetail() {
             ]
           }
         })
-        setComment('');
+        commentRef.current.innerText = '';
       })
       .catch(err => {
         router.push('/500')
@@ -306,14 +312,14 @@ function PinDetail() {
         )}
 
         {!loading && (
-          <div className="flex xl:flex-row flex-col m-auto bg-white max-w-[1500px] rounded-[32px] pb-8">
+          <div className="flex xl:flex-row flex-col m-auto bg-white max-w-[1500px] rounded-lg md:p-2">
             <div className={`relative w-full ${acpectImageType === 'square' ? 'aspect-square' : 'aspect-video'} flex justify-center items-center md:items-start flex-initial`}>
               <Image 
                 src={`/api/imageproxy?url=${encodeURIComponent(pinDetail.image_url)}`} 
                 alt={pinDetail.title}
                 layout="fill" 
                 objectFit="cover"
-                className="rounded-3xl rounded-b-lg"
+                className="rounded-xl"
                 onLoadingComplete={target => {
                   if(target.naturalWidth > target.naturalHeight){
                     setAcpectImageType('video')
@@ -454,7 +460,7 @@ function PinDetail() {
                         <p className="font-extrabold text-lg capitalize">
                             {truncateName(comment?.posted_by.username)}
                         </p>
-                        <p>{comment.comment}</p>
+                        <p style={{whiteSpace: 'pre-line'}}>{comment.comment}</p>
                         <div className="flex items-center gap-3 text-sm font-thin mt-2">
                           <p className="text-gray-500">
                             {comment?.create_at}
@@ -480,16 +486,21 @@ function PinDetail() {
               </div>
               {user && (
                 <form className="flex w-full resize-none overflow-hidden max-h-[150px]">
-                  <input onSubmit={handleAddComment}
-                  onChange={e => {
-                    e.target.value.length < 3 ? setErrorCommentDisplay(true) : setErrorCommentDisplay(false);
-                    setComment(e.target.value);
-                  }}
-                  type="text" 
-                  autoComplete="off" 
-                  placeholder="Tulis comment terkece kamu cmiww.."
-                  className={`${errorCommentDisplay ? 'border-red-500 focus:border-red-600' : 'border-gray-200 focus:border-gray-300'} flex-1 p-2 outline-none font-thin placeholder:font-thin border-2 rounded-lg`}
-                  value={comment} />
+                  <div className={`${errorCommentDisplay ? 'border-red-500 focus:border-red-600' : 'border-gray-200 focus:border-gray-300'} relative w-full box-border border-2 border-gray-200 hide-scrollbar rounded-lg overflow-hidden`}
+                  onClick={e => e.target.focus()}>
+                    <div className="relative px-4 py-2">
+                      <div contentEditable
+                      ref={commentRef}
+                      suppressContentEditableWarning={true}
+                      onInput={e => {
+                        e.target.textContent.length < 3 ? setErrorCommentDisplay(true) : setErrorCommentDisplay(false);
+                      }}
+                      className="peer overflow-x-hidden overflow-y-auto whitespace-pre-wrap break-words z-[1] max-h-[150px] min-h-[20px] pb-0.5 outline-none hide-scrollbar" />
+                      <div className="text-gray-600 peer-empty:opacity-100 opacity-0 mt-2.5 absolute top-0 select-none pointer-events-none">
+                        Tulis comment terkece kamu cmiww..
+                      </div>
+                    </div>
+                  </div>
                   
                   <button 
                   onClick={handleAddComment}
