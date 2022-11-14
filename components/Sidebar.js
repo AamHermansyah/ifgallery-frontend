@@ -34,7 +34,7 @@ function Sidebar({user, isNavbar}) {
 
   return (
     <aside className="h-screen min-w-210 relative">
-      <div className={`${!isNavbar ? 'fixed w-full md:w-[210px] h-full' : 'min-h-screen'} pl-4 pb-4 flex flex-col justify-between bg-white overflow-y-scroll hide-scrollbar`}>
+      <div className={`${!isNavbar ? 'fixed w-full md:w-[210px]' : ''} min-h-full pl-4 pb-4 flex flex-col justify-between bg-white overflow-y-scroll hide-scrollbar`}>
         <div className="flex flex-col">
           <Link href="/" className="flex text-blue-900 gap-2 py-3 w-190 items-center text-xl font-extrabold">
             Forgematics A

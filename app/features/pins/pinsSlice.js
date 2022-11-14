@@ -14,6 +14,7 @@ export const pinsSlice = createSlice({
                     return {
                         _id: action.payload._id,
                         image_url: action.payload.image_url,
+                        title: action.payload.title,
                         destination: action.payload.destination,
                         posted_by: {
                             ...pin.posted_by
