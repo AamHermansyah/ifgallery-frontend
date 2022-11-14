@@ -35,8 +35,9 @@ function Profile() {
   const pins = useSelector(state => state.pins);
 
   const handleSignOut = () => {
-    signOut();
-    router.push('/');
+    signOut({
+      callbackUrl: window.location.origin
+    });
   }
 
   useEffect(() => {

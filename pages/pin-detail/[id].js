@@ -60,13 +60,13 @@ function PinDetail() {
 
         if(data[0]){
           setPinDetail(data[0]);
-          queryFetch = pinDetailMorePinQuery(data[0]);
+          // queryFetch = pinDetailMorePinQuery(data[0]);
 
-          client
-          .fetch(queryFetch, { signal })
-          .then(res => {
-            dispatch(addPins(res));
-          })
+          // client
+          // .fetch(queryFetch, { signal })
+          // .then(res => {
+          //   dispatch(addPins(res));
+          // })
         } else router.push('/404');
         
       })
@@ -425,7 +425,7 @@ function PinDetail() {
                 <p className="mt-3 text-base sm:text-lg" style={{whiteSpace: 'pre-line'}}>{pinDetail.about}</p>
               </div>
               <Link href={`${url}/profile/${pinDetail?.posted_by?._id}`} className="flex gap-2 mt-5 items-center bg-white rounded-lg">
-                <div className="hidden md:flex bg-gradient-to-tr from-yellow-500 to-violet-600 p-0.5 items-center justify-center w-8 sm:w-12 h-8 sm:h-12 relative rounded-full">
+                <div className="flex bg-gradient-to-tr from-yellow-500 to-violet-600 p-0.5 items-center justify-center w-8 sm:w-12 h-8 sm:h-12 relative rounded-full">
                     <div className="relative w-full h-full overflow-hidden rounded-full">
                         <Image src={`/api/imageproxy?url=${encodeURIComponent(pinDetail?.posted_by?.image_url)}`} alt="my-profile" layout="fill" objectFit="cover" />
                     </div>
@@ -444,7 +444,7 @@ function PinDetail() {
                   className={`${index !== arr.length - 1 ? 'border-b-[1px] border-gray-300 pb-3' : ''} flex flex-col gap-2 mt-3 bg-white`} 
                   key={index}>
                     <div className="flex gap-2 bg-white rounded-lg">
-                      <Link href={`${url}/profile/${pinDetail?.posted_by._id}`}
+                      <Link href={`${url}/profile/${comment?.posted_by._id}`}
                       className="flex bg-white border-2 border-gray-900 p-0.5 items-center justify-center w-10 h-10 relative rounded-full">
                           <div className="relative w-full h-full overflow-hidden rounded-full">
                               <Image src={`/api/imageproxy?url=${encodeURIComponent(comment?.posted_by?.image_url)}`} alt="my-profile" layout="fill" objectFit="cover" />
@@ -455,7 +455,7 @@ function PinDetail() {
                             {truncateName(comment?.posted_by.username)}
                         </p>
                         <p>{comment.comment}</p>
-                        <div className="flex items-center gap-3 text-sm font-sans">
+                        <div className="flex items-center gap-3 text-sm font-thin mt-2">
                           <p className="text-gray-500">
                             {comment?.create_at}
                           </p>
@@ -479,7 +479,7 @@ function PinDetail() {
                 )}
               </div>
               {user && (
-                <form className="flex w-full">
+                <form className="flex w-full resize-none overflow-hidden max-h-[150px]">
                   <input onSubmit={handleAddComment}
                   onChange={e => {
                     e.target.value.length < 3 ? setErrorCommentDisplay(true) : setErrorCommentDisplay(false);
@@ -508,7 +508,7 @@ function PinDetail() {
         )}
         {pins?.length > 0 && !loading  && (
           <>
-            <h2 className="text-lg">More like this</h2>
+            <h2 className="text-lg mt-4">More like this</h2>
             <MasonryLayout pins={pins} />
           </>
         )}

@@ -34,7 +34,7 @@ function Sidebar({user, isNavbar}) {
 
   return (
     <aside className="h-screen min-w-210 relative">
-      <div className={`${!isNavbar ? 'fixed w-[210px] h-full' : 'min-h-screen'} pl-4 pb-4 flex flex-col justify-between bg-white overflow-y-scroll hide-scrollbar`}>
+      <div className={`${!isNavbar ? 'fixed w-full md:w-[210px] h-full' : 'min-h-screen'} pl-4 pb-4 flex flex-col justify-between bg-white overflow-y-scroll hide-scrollbar`}>
         <div className="flex flex-col">
           <Link href="/" className="flex text-blue-900 gap-2 py-3 w-190 items-center text-xl font-extrabold">
             Forgematics A
@@ -64,26 +64,28 @@ function Sidebar({user, isNavbar}) {
             ))}
           </div>
         </div>
-        {user && (
-          <Link href={`${url}/profile/${user.userId}`} className="flex items-center mt-4">
-            <div className="bg-gradient-to-tr from-pink-500 to-blue-600 p-0.5 flex items-center justify-center w-10 h-10 relative rounded-full">
-              <div className="relative w-full h-full overflow-hidden rounded-full">
-                  <Image src={`/api/imageproxy?url=${encodeURIComponent(user.image)}`} alt="my-profile" layout="fill" objectFit="cover" />
+        <div>
+          {user && (
+            <Link href={`${url}/profile/${user.userId}`} className="flex items-center my-4">
+              <div className="bg-gradient-to-tr from-pink-500 to-blue-600 p-0.5 flex items-center justify-center w-10 h-10 relative rounded-full">
+                <div className="relative w-full h-full overflow-hidden rounded-full">
+                    <Image src={`/api/imageproxy?url=${encodeURIComponent(user.image)}`} alt="my-profile" layout="fill" objectFit="cover" />
+                </div>
               </div>
-            </div>
-            <p className="ml-2 capitalize">{truncateName(user.name)}</p>
-          </Link>
-        )}
-        {user?.role === 'admin' && (
-          <Link href={`${url}/create-pin`} className="max-w-[180px] py-2 opacity-100 hover:shadow-md hover:opacity-80 flex md:hidden bg-gradient-to-tr from-pink-500 to-blue-600 text-white font-bold shadow-md rounded-lg justify-center items-center transition-all duration-200">
-              Buat Pin
-          </Link>
-        )}
-        {!user && (
-          <Link href={`${url}/login`} className="max-w-[180px] py-2 opacity-100 hover:shadow-md hover:opacity-80 flex bg-gradient-to-tr from-pink-500 to-blue-600 text-white font-bold shadow-md rounded-lg justify-center items-center transition-all duration-200">
-              Login
-          </Link>
-        )}
+              <p className="ml-2 capitalize">{truncateName(user.name)}</p>
+            </Link>
+          )}
+          {user?.role === 'admin' && (
+            <Link href={`${url}/create-pin`} className="max-w-[180px] py-2 opacity-100 hover:shadow-md hover:opacity-80 flex md:hidden bg-gradient-to-tr from-pink-500 to-blue-600 text-white font-bold shadow-md rounded-lg justify-center items-center transition-all duration-200">
+                Buat Pin
+            </Link>
+          )}
+          {!user && (
+            <Link href={`${url}/login`} className="max-w-[180px] py-2 opacity-100 hover:shadow-md hover:opacity-80 flex bg-gradient-to-tr from-pink-500 to-blue-600 text-white font-bold shadow-md rounded-lg justify-center items-center transition-all duration-200">
+                Login
+            </Link>
+          )}
+        </div>
       </div>
     </aside>
   )
