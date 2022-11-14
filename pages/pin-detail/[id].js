@@ -61,13 +61,13 @@ function PinDetail() {
       .then(data => {
         if(data[0]){
           setPinDetail(data[0]);
-          // queryFetch = pinDetailMorePinQuery(data[0]);
+          queryFetch = pinDetailMorePinQuery(data[0]);
 
-          // client
-          // .fetch(queryFetch, { signal })
-          // .then(res => {
-          //   dispatch(addPins(res));
-          // })
+          client
+          .fetch(queryFetch, { signal })
+          .then(res => {
+            dispatch(addPins(res));
+          })
         } else router.push('/404');
         
       })
