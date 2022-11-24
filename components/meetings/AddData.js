@@ -1,8 +1,9 @@
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import { client } from "../../client";
+import { v4 as uuidv4 } from "uuid"
 
-const AddData = ({isSubject}) => {
+const AddData = ({isSubject, user, id, currentData}) => {
     const [adding, setAdding] = useState(false);
     const [isValidInput, setIsValidInput] = useState('idle');
     const router = useRouter();
@@ -38,6 +39,49 @@ const AddData = ({isSubject}) => {
                 })
                 .finally(() => {
                     setAdding(false);
+                    semesterRef.current.value = '';
+                    subjectOrMeetingRef.current.value = '';
+                    timetableOrTopicRef.current.value = '';
+                })
+        } else {
+            const meeting = subjectOrMeetingRef.current.value.trim();
+            const topic = timetableOrTopicRef.current.value.trim();
+            const isValid = +meeting > 0 || topic.length > 3;
+            if(!isValid) return setIsValidInput(false);
+
+            setIsValidInput(true);
+            setAdding(true);
+
+            const doc = {
+                _key: uuidv4(),
+                meeting,
+                topic,
+                posted_by: {
+                    _type: 'posted_by',
+                    _ref: user.userId
+                  }
+            }
+
+            client
+                .patch(id)
+                .setIfMissing({ meetings: [] })
+                .insert('after', 'meetings[-1]', [doc])
+                .commit()
+                .then(() => {
+                    currentData("add", {
+                        ...doc,
+                        posted_by: {
+                            username: user.name
+                        }
+                    });
+                })
+                .catch(err => {
+                    router.push('/500');
+                })
+                .finally(() => {
+                    setAdding(false);
+                    subjectOrMeetingRef.current.value = '';
+                    timetableOrTopicRef.current.value = '';
                 })
         }
     }
@@ -75,7 +119,7 @@ const AddData = ({isSubject}) => {
                 name={isSubject ? 'timetable' : 'topic'}
                 id={isSubject ? 'timetable' : 'topic'}
                 placeholder={isSubject ? 'Jadwal masuk (Ex. Senin 09:45)' : 'Topik materi'}
-                className={`${isSubject ? 'relative -top-[4px]' : ''} py-1 w-full text-sm font-bold outline-none`}
+                className={`${isSubject ? 'relative -top-[4px]' : ''} pb-1 pt-2 w-full text-sm font-bold outline-none`}
                 />
             </div>
             <div className="flex justify-between gap-4 w-full">

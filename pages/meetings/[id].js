@@ -14,6 +14,36 @@ function MeetingsPage() {
     const router = useRouter();
     const { id } = router.query;
 
+    const handleCurrentData = (type, payload) => {
+        if(type === "add"){
+            setData(prev => {
+                const currentData = prev.meetings?.length > 0 ? [...prev.meetings, payload].sort((a, b) => a.meeting - b.meeting) : [payload]
+                return {
+                    ...prev,
+                    meetings: currentData
+                }
+            })
+        }
+
+        if(type === "edit"){
+            const currentData = data.meetings.map(res => res._key === payload.key ? payload.data : res);
+
+            setData(prev => ({
+                ...prev,
+                meetings: currentData
+            }))
+        }
+
+        if(type === "delete"){
+            const currentData = data.meetings.filter(res => res._key !== payload);
+
+            setData(prev => ({
+                ...prev,
+                meetings: currentData
+            }))
+        }
+    }
+
     useEffect(() => {
         const controller = new AbortController();
         const signal = controller.signal;
@@ -24,20 +54,19 @@ function MeetingsPage() {
         .then(res => {
             if(res[0]){
                 setData(res[0]);
+                setLoading(false);
             } else router.push('/');
         })
         .catch(err => {
             if(err.name === "AbortError") return;
             router.push('/500');
         })
-        .finally(() => {
-            setLoading(false);
-        })
 
         return () => {
-            controller.abort()
+            controller.abort();
+            setLoading(true);
         }
-    }, []);
+    }, [loading]);
                             
     return (
         <>
@@ -45,7 +74,7 @@ function MeetingsPage() {
                 <title>Pertemuan mata kuliah Forgematics kelas A</title>
             </Head>
 
-            <Meetings data={data} user={session?.user} loading={loading} />
+            <Meetings data={data} user={session?.user} loading={loading} currentData={(type, data) => handleCurrentData(type, data)} />
        </>
     )
 }

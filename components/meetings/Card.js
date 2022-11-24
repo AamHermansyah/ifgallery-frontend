@@ -1,11 +1,12 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { useRouter } from "next/router"
 import { useState } from "react"
-import { client } from '../../client';
-import { deleteQuery } from '../../utils/data';
-import { truncateName } from '../../utils/truncateString';
+import { client } from '../../client'
+import { deleteQuery } from '../../utils/data'
+import { truncateName } from '../../utils/truncateString'
+import { v4 as uuidv4 } from 'uuid'
 
-const Card = ({data, isSubject, isAdmin}) => {
+const Card = ({data, isSubject, isAdmin, currentData, user, id}) => {
     const [displayDelete, setDisplayDelete] = useState(false);
     const [displayEdit, setDisplayEdit] = useState(false);
     const [deleting, setDeleting] = useState(false);
@@ -21,55 +22,119 @@ const Card = ({data, isSubject, isAdmin}) => {
     const router = useRouter();
 
     const deleteData = () => {
-        setDeleting(true);
-        const query = deleteQuery(data._id);
+        if(isSubject){
+            setDeleting(true);
+            const query = deleteQuery(data._id);
 
-        client
-            .delete({ query })
-            .then(() => {
-                router.reload();
-            })
-            .catch(err => {
-                router.push('/500');
-            })
-            .finally(() => {
-                setDeleting(false);
-                setDisplayDelete(false);
-            })
+            client
+                .delete({ query })
+                .then(() => {
+                    router.reload();
+                })
+                .catch(err => {
+                    router.push('/500');
+                })
+                .finally(() => {
+                    setDeleting(false);
+                    setDisplayDelete(false);
+                })
+        } else {
+            setDeleting(true);
+
+            const queryRemove = ['meetings[0]', `meetings[_key=="${data._key}"]`]
+            client
+                .patch(id)
+                .unset(queryRemove)
+                .commit()
+                .then(() => {
+                    currentData("delete", data._key);
+                })
+                .catch(err => {
+                    router.push('/500');
+                })
+                .finally(() => {
+                    setDeleting(false);
+                    setDisplayDelete(false);
+                })
+        }
     }
 
     const editData = () => {
         if(isSubject){
-            if(isSubject){
-                const subject = subjectOrMeeting.trim();
-                const timetable = timetableOrTopic.trim();
-                const regex = /^(senin|selasa|rabu|kamis|jumat|jum'at|sabtu|minggu)\s(\d\d:\d\d)$/gi;
-                const isValid = semester < 0 || subject.length < 3 || !regex.test(timetable);
+            const subject = subjectOrMeeting.trim();
+            const timetable = timetableOrTopic.trim();
+            const regex = /^(senin|selasa|rabu|kamis|jumat|jum'at|sabtu|minggu)\s(\d\d:\d\d)$/gi;
+            const isValid = semester < 0 || subject.length < 3 || !regex.test(timetable);
 
-                if(isValid) return setIsValidInput(false);
-    
-                setIsValidInput(true);
-                setSaving(true);
-    
-                const doc = {
-                    semester, subject, timetable
-                }
-    
-                client
-                    .patch(data._id)
-                    .set(doc)
-                    .commit()
-                    .then(() => {
-                        router.reload();
-                    })
-                    .catch(() => {
-                        router.push('/500');
-                    })
-                    .finally(() => {
-                        setSaving(false);
-                        setDisplayEdit(false);
-                    })
+            if(isValid) return setIsValidInput(false);
+
+            setIsValidInput(true);
+            setSaving(true);
+
+            const doc = {
+                semester, subject, timetable
             }
+
+            client
+                .patch(data._id)
+                .set(doc)
+                .commit()
+                .then(() => {
+                    router.reload();
+                })
+                .catch(() => {
+                    router.push('/500');
+                })
+                .finally(() => {
+                    setSaving(false);
+                    setDisplayEdit(false);
+                })
+        } else {
+            const meeting = subjectOrMeeting.trim();
+            const topic = timetableOrTopic.trim();
+            const isValid = +meeting > 0 || topic.length > 3;
+            if(!isValid) return setIsValidInput(false);
+
+            setIsValidInput(true);
+            setSaving(true);
+
+            const doc = {
+                _key: uuidv4(),
+                meeting,
+                topic,
+                posted_by: {
+                    _type: 'posted_by',
+                    _ref: user.userId
+                  }
+            }
+
+            const queryRemove = ['meetings[0]', `meetings[_key=="${data._key}"]`]
+            client
+                .patch(id)
+                .unset(queryRemove)
+                .setIfMissing({ meetings: [] })
+                .insert('after', 'meetings[-1]', [doc])
+                .commit()
+                .then(() => {
+                    currentData("edit", {
+                        key: data._key,
+                        data: {
+                            ...doc,
+                            posted_by: {
+                                username: user.name
+                            }
+                        }
+                    });
+
+                    setDisplayEdit(false);
+                })
+                .catch(err => {
+                    router.push('/500');
+                })
+                .finally(() => {
+                    setSaving(false);
+                    setDisplayEdit(false);
+                })
         }
     }
 
@@ -85,14 +150,14 @@ const Card = ({data, isSubject, isAdmin}) => {
                         onClick={e => {
                             setDisplayDelete(false);
                         }}
-                        className="bg-red-500 text-[.7rem] mt-2 w-max text-white pb-1 pt-2 px-3 shadow-md outline-none rounded-sm cursor-pointer disabled:opacity-50">
+                        className="border-sky-500 bg-white border-[1px] text-[.7rem] mt-2 w-max text-sky-500 pb-1 pt-2 px-3 shadow-md outline-none rounded-sm cursor-pointer disabled:opacity-50">
                             Cancel
                         </button>
                         <button
                         type="button"
                         disabled={deleting}
                         onClick={deleteData}
-                        className="bg-sky-500 text-[.7rem] mt-2 w-max text-white pb-1 pt-2 px-3 shadow-md outline-none rounded-sm cursor-pointer disabled:opacity-50">
+                        className="bg-red-500 text-[.7rem] mt-2 w-max text-white pb-1 pt-2 px-3 shadow-md outline-none rounded-sm cursor-pointer disabled:opacity-50">
                             {deleting ? 'Deleting...' : 'Delete'}
                         </button>
                     </div>
@@ -135,7 +200,7 @@ const Card = ({data, isSubject, isAdmin}) => {
                         name={isSubject ? 'timetable' : 'topic'}
                         id={isSubject ? 'timetable' : 'topic'}
                         placeholder={isSubject ? 'Jadwal masuk (Ex. Senin 09:45)' : 'Topik materi'}
-                        className={`${isSubject ? 'relative -top-[4px] font-bold' : ''} py-1 w-full text-sm outline-none`}
+                        className={`${isSubject ? 'relative -top-[4px] font-bold' : ''} pb-1 pt-2 w-full text-sm outline-none`}
                         />
                     </div>
                     <div className="flex justify-between gap-4 w-full">
@@ -149,7 +214,7 @@ const Card = ({data, isSubject, isAdmin}) => {
                             setSubjectOrMeeting(isSubject ? data.subject : data.meeting);
                             setTimetableOrTopic(isSubject ? data.timetable : data.topic);
                         }}
-                        className="bg-red-500 text-[.7rem] mt-2 w-max text-white pb-1 pt-2 px-3 shadow-md outline-none rounded-sm cursor-pointer disabled:opacity-50">
+                        className="border-sky-500 bg-white border-[1px] text-[.7rem] mt-2 w-max text-sky-500 pb-1 pt-2 px-3 shadow-md outline-none rounded-sm cursor-pointer disabled:opacity-50">
                             Cancel
                         </button>
                         <button
@@ -175,7 +240,7 @@ const Card = ({data, isSubject, isAdmin}) => {
                     {isSubject ? `${data.subject}` : `Pertemuan ke ${data.meeting}`}
                 </p>
 
-                <p className={`${isSubject ? 'font-bold' : ''} py-1 text-sm mt-2 text-gray-700`}>
+                <p className={`${isSubject ? 'font-bold' : ''} pb-1 pt-2 text-sm mt-2 text-gray-700`}>
                     {isSubject ? data.timetable : data.topic}
                 </p>
 
