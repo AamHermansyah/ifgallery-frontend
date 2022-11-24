@@ -1,12 +1,12 @@
 import React from 'react'
 import { Dna } from 'react-loader-spinner';
 
-function Spinner({message}) {
+function Spinner({message, width = 80, height = 80}) {
   return (
     <div className="flex flex-col justify-center items-center w-full h-full">
         <Dna
-        height="80"
-        width="80"
+        height={width}
+        width={height}
         ariaLabel="dna-loading"
         wrapperClass="dna-wrapper"
         />

@@ -60,7 +60,7 @@ function Navigation({children}) {
                 )}
             </div>
             {toggleSidebar && (
-                <div className="fixed md:w-max w-4/5 h-screen overflow-y-auto shadow-md md:shadow-none z-10 animate-slide-in">
+                <div className="fixed md:w-max w-4/5 h-screen overflow-y-auto shadow-md md:shadow-none z-10 animate-slide-in hide-scrollbar">
                     <Sidebar user={user} isNavbar={true} />
                     <div className="absolute top-0 w-full p-2 flex justify-end">
                         <MdClose 

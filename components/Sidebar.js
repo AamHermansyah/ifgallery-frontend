@@ -8,6 +8,7 @@ import { truncateName } from '../utils/truncateString'
 import { useRouter } from 'next/router';
 import { url } from '../utils/config'
 import { MdGroups } from 'react-icons/md'
+import { SiGoogleclassroom } from 'react-icons/si'
 
 function Sidebar({user, isNavbar}) {
   const {navigationActive, setNavigationActive} = useContext(NavigationContextApp);
@@ -26,6 +27,9 @@ function Sidebar({user, isNavbar}) {
       case '/member-list':
         setNavigationActive('member-list')
         break
+      case '/meetings':
+        setNavigationActive('meetings')
+        break
       default:
         setNavigationActive('home');
         break
@@ -34,7 +38,7 @@ function Sidebar({user, isNavbar}) {
 
   return (
     <aside className="h-screen min-w-210 relative">
-      <div className={`${!isNavbar ? 'fixed w-full md:w-[210px]' : ''} min-h-full pl-4 pb-4 flex flex-col justify-between bg-white overflow-y-scroll hide-scrollbar`}>
+      <div className={`${!isNavbar ? 'fixed w-full md:w-[210px]' : ''} min-h-full pl-4 pb-4 flex flex-col bg-white overflow-y-scroll hide-scrollbar`}>
         <div className="flex flex-col">
           <Link href="/" className="flex text-blue-900 gap-2 py-3 w-190 items-center text-xl font-extrabold">
             Forgematics A
@@ -52,6 +56,12 @@ function Sidebar({user, isNavbar}) {
               <MdGroups />
               Member List
             </Link>
+            <Link 
+            href="/meetings" 
+            className={`${navigationActive === "meetings" ? isActive : isNotActive} flex items-center gap-3 transition-all duration-200 capitalize`}>
+              <SiGoogleclassroom />
+              Pertemuan
+            </Link>
             <h3 className="text-base 2xl:text-xl">Discover Categories</h3>
             {categories.map((category, index) => (
                 <Link 
@@ -64,7 +74,7 @@ function Sidebar({user, isNavbar}) {
             ))}
           </div>
         </div>
-        <div>
+        <div className="mt-4">
           {user ? (
             <Link href={`${url}/profile/${user.userId}`} className="flex items-center my-4">
               <div className="bg-gradient-to-tr from-pink-500 to-blue-600 p-0.5 flex items-center justify-center w-10 h-10 relative rounded-full">

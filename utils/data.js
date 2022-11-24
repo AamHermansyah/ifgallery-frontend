@@ -203,6 +203,13 @@ export const userSavedPinsQuery = (userId) => {
   return query;
 };
 
+export const subjectsQuery = `*[_type == 'subjects'] | order(semester asc) {
+  subject,
+  timetable,
+  semester,
+  _id
+}`;
+
 export const categories = [
     {
         name: 'Fotbar',
