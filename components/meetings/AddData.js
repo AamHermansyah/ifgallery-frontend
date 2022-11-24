@@ -87,7 +87,7 @@ const AddData = ({isSubject, user, id, currentData}) => {
     }
 
     return (
-        <div className={`${!isValidInput ? 'border-red-500' : 'border-white'} border-2 w-full sm:max-w-[350px] h-max flex flex-col justify-between p-6 bg-white rounded-lg sm:rounded-xl`}>
+        <div className={`${!isValidInput ? 'border-red-500' : 'border-white'} border-2 w-full max-w-[500px] sm:max-w-[350px] h-max flex flex-col justify-between p-6 bg-white rounded-lg sm:rounded-xl mx-auto`}>
             <div className={!isSubject ? 'mt-1' : '-mt-2'}>
                 {isSubject && (
                     <div className="flex items-center gap-2 mt-[8px]">
@@ -119,7 +119,7 @@ const AddData = ({isSubject, user, id, currentData}) => {
                 name={isSubject ? 'timetable' : 'topic'}
                 id={isSubject ? 'timetable' : 'topic'}
                 placeholder={isSubject ? 'Jadwal masuk (Ex. Senin 09:45)' : 'Topik materi'}
-                className={`${isSubject ? 'relative -top-[4px]' : ''} pb-1 pt-2 w-full text-sm font-bold outline-none`}
+                className={`${isSubject ? 'relative -top-[4px] font-bold' : ''} h-[30px] w-full text-sm outline-none`}
                 />
             </div>
             <div className="flex justify-between gap-4 w-full">

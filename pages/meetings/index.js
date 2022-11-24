@@ -7,11 +7,21 @@ import { subjectsQuery } from '../../utils/data';
 import { useRouter } from 'next/router';
 
 function MeetingsPage() {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]);
     const { data: session } = useSession();
 
     const router = useRouter();
+
+    const handleCurrentData = (type, payload) => {
+        if(type === "delete") {
+            setData(prev => prev.filter(res => res._id !== payload));
+        }
+
+        if(type === "edit"){
+            setData(prev => prev.map(res => res._id === payload.id ? {_id: payload.id, ...payload.data} : res));
+        }
+    }
 
     useEffect(() => {
         const controller = new AbortController();
@@ -30,7 +40,8 @@ function MeetingsPage() {
         })
 
         return () => {
-            controller.abort()
+            controller.abort();
+            setLoading(true);
         }
     }, []);
 
@@ -41,7 +52,7 @@ function MeetingsPage() {
                 <meta name="description" content="Daftar mata kuliah yang sedang ditempuh saat ini" />
             </Head>
 
-            <Meetings data={data} isSubject={true} user={session?.user} loading={loading} />
+            <Meetings data={data} isSubject={true} user={session?.user} loading={loading} currentData={(type, data) => handleCurrentData(type, data)} />
        </>
     )
 }

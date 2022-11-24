@@ -29,7 +29,7 @@ const Card = ({data, isSubject, isAdmin, currentData, user, id}) => {
             client
                 .delete({ query })
                 .then(() => {
-                    router.reload();
+                    currentData("delete", data._id);
                 })
                 .catch(err => {
                     router.push('/500');
@@ -38,6 +38,7 @@ const Card = ({data, isSubject, isAdmin, currentData, user, id}) => {
                     setDeleting(false);
                     setDisplayDelete(false);
                 })
+
         } else {
             setDeleting(true);
 
@@ -80,7 +81,10 @@ const Card = ({data, isSubject, isAdmin, currentData, user, id}) => {
                 .set(doc)
                 .commit()
                 .then(() => {
-                    router.reload();
+                    currentData("edit", {
+                        id: data._id,
+                        data: doc
+                    });
                 })
                 .catch(() => {
                     router.push('/500');
@@ -89,6 +93,7 @@ const Card = ({data, isSubject, isAdmin, currentData, user, id}) => {
                     setSaving(false);
                     setDisplayEdit(false);
                 })
+
         } else {
             const meeting = subjectOrMeeting.trim();
             const topic = timetableOrTopic.trim();
@@ -139,7 +144,7 @@ const Card = ({data, isSubject, isAdmin, currentData, user, id}) => {
     }
 
     return (
-        <div className="relative w-full sm:max-w-[350px] h-max bg-white rounded-lg sm:rounded-xl shadow-sm">
+        <div className="relative w-full max-w-[500px] sm:max-w-[350px] h-max bg-white rounded-lg sm:rounded-xl shadow-sm">
             {displayDelete && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-white bg-opacity-50 backdrop-blur-sm rounded-lg sm:rounded-xl">
                     <h1>Are you kidding me?</h1>
@@ -200,7 +205,7 @@ const Card = ({data, isSubject, isAdmin, currentData, user, id}) => {
                         name={isSubject ? 'timetable' : 'topic'}
                         id={isSubject ? 'timetable' : 'topic'}
                         placeholder={isSubject ? 'Jadwal masuk (Ex. Senin 09:45)' : 'Topik materi'}
-                        className={`${isSubject ? 'relative -top-[4px] font-bold' : ''} pb-1 pt-2 w-full text-sm outline-none`}
+                        className={`${isSubject ? 'relative -top-[4px] font-bold' : ''} h-[30px] w-full text-sm outline-none`}
                         />
                     </div>
                     <div className="flex justify-between gap-4 w-full">
@@ -240,7 +245,7 @@ const Card = ({data, isSubject, isAdmin, currentData, user, id}) => {
                     {isSubject ? `${data.subject}` : `Pertemuan ke ${data.meeting}`}
                 </p>
 
-                <p className={`${isSubject ? 'font-bold' : ''} pb-1 pt-2 text-sm mt-2 text-gray-700`}>
+                <p className={`${isSubject ? 'font-bold' : ''} h-[30px] text-sm mt-2 text-gray-700`}>
                     {isSubject ? data.timetable : data.topic}
                 </p>
 

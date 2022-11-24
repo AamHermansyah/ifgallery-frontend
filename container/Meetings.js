@@ -12,15 +12,18 @@ function Meetings({data, isSubject, user, loading, currentData}) {
 
                 {loading && <Loading />}
 
-                {!loading && data?._id && user?.role === "admin" && (
+                {!loading && user?.role === 'admin' && (
                     <div className="px-4 mt-4">
-                        <AddData isSubject={isSubject} user={user} id={data._id} currentData={(type, data) => currentData(type, data)} />
+                        <AddData isSubject={isSubject} user={user} id={data?._id} currentData={(type, data) => currentData(type, data)} />
                     </div>
                 )}
 
                 {!isSubject && !loading && (
                     <div className="p-4">
-                        <h1 className="font-bold text-xl  sm:text-2xl mb-2">{`${data.subject} (Semester ${data.semester},  ${data.timetable})`}</h1>
+                        <h1 className="max-w-[500px] sm:max-w-full font-bold text-xl sm:text-2xl mb-2 mx-auto">
+                            {data.subject}<br className="block sm:hidden" />{" "}
+                            {`(Semester ${data.semester},  ${data.timetable})`}
+                        </h1>
                         {!data.meetings && <p className="text-xl font-bold text-center my-4">Pertemuan mata kuliah masih kosong.</p>}
                         {data.meetings?.length > 0 && (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 justify-items-center mt-2">
@@ -49,7 +52,8 @@ function Meetings({data, isSubject, user, loading, currentData}) {
                                 key={res._id}
                                 data={res}
                                 isSubject={isSubject} 
-                                isAdmin={user?.role === 'admin'} />
+                                isAdmin={user?.role === 'admin'}
+                                currentData={(type, data) => currentData(type, data)} />
                             ))}
                         </div>
                     </div>

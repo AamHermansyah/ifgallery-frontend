@@ -66,7 +66,7 @@ function MeetingsPage() {
             controller.abort();
             setLoading(true);
         }
-    }, [loading]);
+    }, []);
                             
     return (
         <>
