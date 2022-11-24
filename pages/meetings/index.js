@@ -9,31 +9,30 @@ import { useRouter } from 'next/router';
 function MeetingsPage() {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
+    const { data: session } = useSession();
 
     const router = useRouter();
 
-    // useEffect(() => {
-    //     const controller = new AbortController();
-    //     const signal = controller.signal;
+    useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
 
-    //     client.fetch(subjectsQuery, { signal })
-    //     .then(res => {
-    //         setData(res);
-    //     })
-    //     .catch(err => {
-    //         if(err.name === "AbortError") return;
-    //         router.push('/500');
-    //     })
-    //     .finally(() => {
-    //         setLoading(false);
-    //     })
+        client.fetch(subjectsQuery, { signal })
+        .then(res => {
+            setData(res);
+        })
+        .catch(err => {
+            if(err.name === "AbortError") return;
+            router.push('/500');
+        })
+        .finally(() => {
+            setLoading(false);
+        })
 
-    //     return () => {
-    //         controller.abort()
-    //     }
-    // }, []);
-
-    const { data: session } = useSession();
+        return () => {
+            controller.abort()
+        }
+    }, []);
 
     return (
         <>

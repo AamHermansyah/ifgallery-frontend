@@ -210,6 +210,26 @@ export const subjectsQuery = `*[_type == 'subjects'] | order(semester asc) {
   _id
 }`;
 
+export const subjectDetailQuery = (id) => {
+  return `*[_type == 'subjects' && _id == '${id}'] | order(meeting asc) {
+    subject,
+    timetable,
+    semester,
+    _id,
+    meetings[]{
+      topic,
+      meeting,
+      posted_by -> {
+        username
+      }
+    }
+  }`;
+}
+
+export const deleteQuery = (id) => {
+  return `*[_id == '${id}'][0]`;
+}
+
 export const categories = [
     {
         name: 'Fotbar',

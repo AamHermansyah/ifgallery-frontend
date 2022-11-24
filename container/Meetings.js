@@ -13,24 +13,23 @@ function Meetings({data, isSubject, user, loading}) {
                 {loading && <Loading />}
 
                 {!loading && (
-                    <div className="px-4 mt-6">
+                    <div className="px-4 mt-4">
                         <AddData isSubject={isSubject} />
                     </div>
                 )}
 
-
-                {!isSubject && (
+                {!isSubject && !loading && (
                     <div className="p-4">
-                        <h1 className="font-bold text-2xl mb-2">{`${data.subject} ${data.timetable}`}</h1>
-                        {!loading && data.length === 0 && <p className="text-xl font-bold text-center my-4">Data masih kosong:(</p>}
-                        {!loading && data.length > 0 && (
+                        <h1 className="font-bold text-2xl mb-2">{`${data.subject} (Semester ${data.semester},  ${data.timetable})`}</h1>
+                        {data.meetings.length === 0 && <p className="text-xl font-bold text-center my-4">Data masih kosong:(</p>}
+                        {data.meetings.length > 0 && (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 justify-items-center mt-2">
-                                {data.map(res => (
+                                {data.meetings.map((res, index) => (
                                     <Card 
-                                    key={res._id}
+                                    key={index}
                                     data={res}
                                     isSubject={isSubject} 
-                                    isAdmin={user.role === 'admin'} />
+                                    isAdmin={user?.role === 'admin'} />
                                 ))}
                             </div>
                         )}

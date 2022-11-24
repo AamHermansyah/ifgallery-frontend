@@ -1,12 +1,77 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { useRouter } from "next/router"
 import { useState } from "react"
+import { client } from '../../client';
+import { deleteQuery } from '../../utils/data';
+import { truncateName } from '../../utils/truncateString';
 
 const Card = ({data, isSubject, isAdmin}) => {
     const [displayDelete, setDisplayDelete] = useState(false);
     const [displayEdit, setDisplayEdit] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+    const [saving, setSaving] = useState(false);
 
+    // input state
+    const [isValidInput, setIsValidInput] = useState('idle');
+    const [semester, setSemester] = useState(data?.semester);
+    const [subjectOrMeeting, setSubjectOrMeeting] = useState(isSubject ? data.subject : data.meeting);
+    const [timetableOrTopic, setTimetableOrTopic] = useState(isSubject ? data.timetable : data.topic);
+
+    // navigate
     const router = useRouter();
+
+    const deleteData = () => {
+        setDeleting(true);
+        const query = deleteQuery(data._id);
+
+        client
+            .delete({ query })
+            .then(() => {
+                router.reload();
+            })
+            .catch(err => {
+                router.push('/500');
+            })
+            .finally(() => {
+                setDeleting(false);
+                setDisplayDelete(false);
+            })
+    }
+
+    const editData = () => {
+        if(isSubject){
+            if(isSubject){
+                const subject = subjectOrMeeting.trim();
+                const timetable = timetableOrTopic.trim();
+                const regex = /^(senin|selasa|rabu|kamis|jumat|jum'at|sabtu|minggu)\s(\d\d:\d\d)$/gi;
+                const isValid = semester < 0 || subject.length < 3 || !regex.test(timetable);
+
+                if(isValid) return setIsValidInput(false);
+    
+                setIsValidInput(true);
+                setSaving(true);
+    
+                const doc = {
+                    semester, subject, timetable
+                }
+    
+                client
+                    .patch(data._id)
+                    .set(doc)
+                    .commit()
+                    .then(() => {
+                        router.reload();
+                    })
+                    .catch(() => {
+                        router.push('/500');
+                    })
+                    .finally(() => {
+                        setSaving(false);
+                        setDisplayEdit(false);
+                    })
+            }
+        }
+    }
 
     return (
         <div className="relative w-full sm:max-w-[350px] h-max bg-white rounded-lg sm:rounded-xl shadow-sm">
@@ -14,40 +79,48 @@ const Card = ({data, isSubject, isAdmin}) => {
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-white bg-opacity-50 backdrop-blur-sm rounded-lg sm:rounded-xl">
                     <h1>Are you kidding me?</h1>
                     <div className="flex justify-center gap-4 w-full">
-                        <div
+                        <button
+                        type="button"
+                        disabled={deleting}
                         onClick={e => {
                             setDisplayDelete(false);
                         }}
-                        className="bg-red-500 text-[.7rem] mt-2 w-max text-white pb-1 pt-2 px-3 shadow-md outline-none rounded-sm cursor-pointer">
+                        className="bg-red-500 text-[.7rem] mt-2 w-max text-white pb-1 pt-2 px-3 shadow-md outline-none rounded-sm cursor-pointer disabled:opacity-50">
                             Cancel
-                        </div>
-                        <div
-                        onClick={e => e.stopPropagation()}
-                        className="bg-sky-500 text-[.7rem] mt-2 w-max text-white pb-1 pt-2 px-3 shadow-md outline-none rounded-sm cursor-pointer">
-                            Delete
-                        </div>
+                        </button>
+                        <button
+                        type="button"
+                        disabled={deleting}
+                        onClick={deleteData}
+                        className="bg-sky-500 text-[.7rem] mt-2 w-max text-white pb-1 pt-2 px-3 shadow-md outline-none rounded-sm cursor-pointer disabled:opacity-50">
+                            {deleting ? 'Deleting...' : 'Delete'}
+                        </button>
                     </div>
                 </div>
             )}
 
             {displayEdit && (
-                <div className="absolute inset-0 flex flex-col justify-between p-6 bg-white rounded-lg sm:rounded-xl">
-                    <div className={!isSubject ? 'mt-1' : '-mt-2'}>
+                <div className={`${isValidInput ? 'border-white' : 'border-red-500'} border-2 absolute inset-0 flex flex-col justify-between p-6 bg-white rounded-lg sm:rounded-xl`}>
+                    <div className={!isSubject ? '-mt-1' : '-mt-2'}>
                         {isSubject && (
                             <div className="flex items-center gap-2 mt-[8px]">
                                 <p className="w-max text-sky-500 text-md font-bold">Semester</p>
                                 <input
+                                onChange={e => setSemester(e.target.value)}
+                                value={semester}
                                 type="text"
                                 name="semester"
                                 id="semester"
                                 placeholder="0"
-                                className={`w-[50px] text-md font-bold outline-none`}
+                                className="w-[50px] text-md font-bold outline-none"
                                 />
                             </div>
                         )}
                         <div className="flex gap-2 items-center -mt-1">
                             {!isSubject && <p className="text-xl font-bold text-gray-800 capitalize leading-3">Pertemuan ke </p>}
                             <input
+                            onChange={e => setSubjectOrMeeting(e.target.value)}
+                            value={subjectOrMeeting}
                             type={isSubject ? 'text' : 'number'}
                             name={isSubject ? 'subject' : 'meeting'}
                             id={isSubject ? 'subject' : 'meeting'}
@@ -56,26 +129,36 @@ const Card = ({data, isSubject, isAdmin}) => {
                             />
                         </div>
                         <input
+                        onChange={e => setTimetableOrTopic(e.target.value)}
+                        value={timetableOrTopic}
                         type="text"
                         name={isSubject ? 'timetable' : 'topic'}
                         id={isSubject ? 'timetable' : 'topic'}
                         placeholder={isSubject ? 'Jadwal masuk (Ex. Senin 09:45)' : 'Topik materi'}
-                        className={`${isSubject ? 'relative -top-[4px]' : ''} w-full text-sm font-bold outline-none`}
+                        className={`${isSubject ? 'relative -top-[4px] font-bold' : ''} py-1 w-full text-sm outline-none`}
                         />
                     </div>
                     <div className="flex justify-between gap-4 w-full">
-                        <div
+                        <button
+                        type="button"
+                        disabled={saving}
                         onClick={e => {
+                            setIsValidInput('idle');
                             setDisplayEdit(false);
+                            setSemester(isSubject && data.semester);
+                            setSubjectOrMeeting(isSubject ? data.subject : data.meeting);
+                            setTimetableOrTopic(isSubject ? data.timetable : data.topic);
                         }}
-                        className="bg-sky-500 text-[.7rem] mt-2 w-max text-white pb-1 pt-2 px-3 shadow-md outline-none rounded-sm cursor-pointer">
+                        className="bg-red-500 text-[.7rem] mt-2 w-max text-white pb-1 pt-2 px-3 shadow-md outline-none rounded-sm cursor-pointer disabled:opacity-50">
                             Cancel
-                        </div>
-                        <div
-                        onClick={e => e.stopPropagation()}
-                        className="bg-red-500 text-[.7rem] mt-2 w-max text-white pb-1 pt-2 px-3 shadow-md outline-none rounded-sm cursor-pointer">
-                            Edit
-                        </div>
+                        </button>
+                        <button
+                        type="button"
+                        disabled={saving}
+                        onClick={editData}
+                        className="bg-sky-500 text-[.7rem] mt-2 w-max text-white pb-1 pt-2 px-3 shadow-md outline-none rounded-sm cursor-pointer disabled:opacity-50">
+                            {saving ? 'Saving...' : 'Edit'}
+                        </button>
                     </div>
                 </div>
             )}
@@ -84,34 +167,39 @@ const Card = ({data, isSubject, isAdmin}) => {
             onClick={() => isSubject && router.push(`/meetings/${data._id}`)}
             className={`${isSubject ? 'cursor-pointer' : ''} p-6 gap-4 w-full`}>
 
-                {isSubject && <p className="text-sky-500 text-md font-bold mb-1">Semester 1</p>}
+                <p className="text-sky-500 text-md font-bold mb-1 capitalize">
+                    {isSubject ? `Semester ${data.semester}` : truncateName(data.posted_by.username)}
+                </p>
+
                 <p className="text-xl font-bold text-gray-800 capitalize leading-3">
                     {isSubject ? `${data.subject}` : `Pertemuan ke ${data.meeting}`}
                 </p>
 
-                <p className={`${isSubject ? 'font-bold' : ''} text-sm mt-2 text-gray-700`}>
-                    {isSubject ? `Jadwal ${data.timetable}` : `${data.topic}`}
+                <p className={`${isSubject ? 'font-bold' : ''} py-1 text-sm mt-2 text-gray-700`}>
+                    {isSubject ? data.timetable : data.topic}
                 </p>
 
                 {isAdmin && (
                     <div className="flex justify-between">
-                        <div
+                        <button
+                        type="button"
                         onClick={e => {
                             e.stopPropagation();
                             setDisplayEdit(true);
                         }}
                         className="bg-sky-500 text-[.7rem] mt-2 w-max text-white pb-1 pt-2 px-3 shadow-md outline-none rounded-sm cursor-pointer">
                             {isSubject ? 'Edit Matkul' : 'Edit'}
-                        </div>
+                        </button>
 
-                        <div
+                        <button
+                        type="button"
                         onClick={e => {
                             e.stopPropagation();
                             setDisplayDelete(true);
                         }}
                         className="bg-red-500 text-[.7rem] mt-2 w-max text-white pb-1 pt-2 px-3 shadow-md outline-none rounded-sm cursor-pointer">
                             Delete
-                        </div>
+                        </button>
                     </div>
                 )}
 

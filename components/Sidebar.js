@@ -28,6 +28,7 @@ function Sidebar({user, isNavbar}) {
         setNavigationActive('member-list')
         break
       case '/meetings':
+      case '/meetings/[id]':
         setNavigationActive('meetings')
         break
       default:
