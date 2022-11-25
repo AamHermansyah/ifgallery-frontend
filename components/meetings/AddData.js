@@ -106,7 +106,7 @@ const AddData = ({isSubject, user, id, currentData}) => {
                     </div>
                 )}
                 <div className="flex gap-2 items-center -mt-1">
-                    {!isSubject && <p className="text-xl font-bold text-gray-800 capitalize leading-3 z-[1]">Pertemuan ke </p>}
+                    {!isSubject && <p className="bg-red-500 text-xl font-bold text-gray-800 capitalize leading-3 z-[1]">Pertemuan ke </p>}
                     <input
                     autoComplete={false}
                     ref={subjectOrMeetingRef}
@@ -114,7 +114,7 @@ const AddData = ({isSubject, user, id, currentData}) => {
                     name={isSubject ? 'subject' : 'meeting'}
                     id={isSubject ? 'subject' : 'meeting'}
                     placeholder={isSubject ? 'Mata kuliah' : '0'}
-                    className={`${isSubject ? 'w-full' : 'w-[60px]'} text-xl font-bold text-gray-800 capitalize outline-none z-[1]`}
+                    className={`${isSubject ? 'w-full' : 'w-[60px]'} bg-yellow-400 text-xl font-bold text-gray-800 capitalize outline-none z-[1]`}
                     />
                 </div>
                 <input
@@ -124,7 +124,7 @@ const AddData = ({isSubject, user, id, currentData}) => {
                 name={isSubject ? 'timetable' : 'topic'}
                 id={isSubject ? 'timetable' : 'topic'}
                 placeholder={isSubject ? 'Jadwal masuk (Ex. Senin 09:45)' : 'Topik materi'}
-                className={`${isSubject ? 'relative -top-[4px] font-bold' : ''} h-[30px] pt-2 -mt-3 w-full text-sm outline-none`}
+                className={`${isSubject ? 'relative -top-[4px] font-bold' : ''} bg-violet-500 h-[30px] pt-2 -mt-3 w-full text-sm outline-none`}
                 />
             </div>
             <div className="flex justify-between gap-4 w-full">
