@@ -107,6 +107,7 @@ const Card = ({data, isSubject, isAdmin, currentData, user, id}) => {
                 _key: uuidv4(),
                 meeting,
                 topic,
+                create_at: data?.create_at ? data.create_at : '',
                 posted_by: {
                     _type: 'posted_by',
                     _ref: user.userId
@@ -145,6 +146,13 @@ const Card = ({data, isSubject, isAdmin, currentData, user, id}) => {
 
     return (
         <div className="relative w-full max-w-[500px] sm:max-w-[350px] h-max bg-white rounded-lg sm:rounded-xl shadow-sm">
+
+            {data?.create_at && (
+                <div className="absolute top-0 right-0 px-2 py-1 text-sm text-gray-700">
+                    <p>{data.create_at}</p>
+                </div>
+            )}
+
             {displayDelete && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-white bg-opacity-50 backdrop-blur-sm rounded-lg sm:rounded-xl">
                     <h1>Are you kidding me?</h1>
@@ -176,6 +184,7 @@ const Card = ({data, isSubject, isAdmin, currentData, user, id}) => {
                             <div className="flex items-center gap-2 mt-[8px]">
                                 <p className="w-max text-sky-500 text-md font-bold">Semester</p>
                                 <input
+                                autoComplete={false}
                                 onChange={e => setSemester(e.target.value)}
                                 value={semester}
                                 type="text"
@@ -189,6 +198,7 @@ const Card = ({data, isSubject, isAdmin, currentData, user, id}) => {
                         <div className="flex gap-2 items-center -mt-1">
                             {!isSubject && <p className="text-xl font-bold text-gray-800 capitalize leading-3">Pertemuan ke </p>}
                             <input
+                            autoComplete={false}
                             onChange={e => setSubjectOrMeeting(e.target.value)}
                             value={subjectOrMeeting}
                             type={isSubject ? 'text' : 'number'}
@@ -199,13 +209,14 @@ const Card = ({data, isSubject, isAdmin, currentData, user, id}) => {
                             />
                         </div>
                         <input
+                        autoComplete={false}
                         onChange={e => setTimetableOrTopic(e.target.value)}
                         value={timetableOrTopic}
                         type="text"
                         name={isSubject ? 'timetable' : 'topic'}
                         id={isSubject ? 'timetable' : 'topic'}
                         placeholder={isSubject ? 'Jadwal masuk (Ex. Senin 09:45)' : 'Topik materi'}
-                        className={`${isSubject ? 'relative -top-[4px] font-bold' : ''} h-[30px] w-full text-sm outline-none`}
+                        className={`${isSubject ? 'relative -top-[4px] font-bold' : ''} h-[30px] pt-2 -mt-3 w-full text-sm outline-none`}
                         />
                     </div>
                     <div className="flex justify-between gap-4 w-full">
@@ -245,7 +256,7 @@ const Card = ({data, isSubject, isAdmin, currentData, user, id}) => {
                     {isSubject ? `${data.subject}` : `Pertemuan ke ${data.meeting}`}
                 </p>
 
-                <p className={`${isSubject ? 'font-bold' : ''} h-[30px] text-sm mt-2 text-gray-700`}>
+                <p className={`${isSubject ? 'font-bold' : ''} h-[30px] pt-2 text-sm text-gray-700`}>
                     {isSubject ? data.timetable : data.topic}
                 </p>
 

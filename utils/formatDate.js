@@ -8,7 +8,7 @@ export function getHoursAndMinutes(date){
     
     return `${hours}:${minutes}`;
 }
-  
+
 export function getDateWithDayName(dates){
     const DAYS = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
     const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];

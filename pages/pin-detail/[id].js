@@ -431,9 +431,9 @@ function PinDetail() {
                 <p className="mt-3 text-base sm:text-lg" style={{whiteSpace: 'pre-line'}}>{pinDetail.about}</p>
               </div>
               <Link href={`${url}/profile/${pinDetail?.posted_by?._id}`} className="flex gap-2 mt-5 items-center bg-white rounded-lg">
-                <div className="flex bg-gradient-to-tr from-yellow-500 to-violet-600 p-0.5 items-center justify-center w-8 sm:w-12 h-8 sm:h-12 relative rounded-full">
+                <div className="flex bg-gradient-to-tr from-yellow-500 to-violet-600 p-0.5 items-center justify-center w-10 sm:w-12 h-10 sm:h-12 relative rounded-full">
                     <div className="relative w-full h-full overflow-hidden rounded-full">
-                        <Image src={`/api/imageproxy?url=${encodeURIComponent(pinDetail?.posted_by?.image_url)}`} alt="my-profile" layout="fill" objectFit="cover" />
+                        <Image src={`/api/imageproxy?url=${encodeURIComponent(pinDetail?.posted_by?.image_url)}`} alt="author-profile" layout="fill" objectFit="cover" />
                     </div>
                 </div>
                 <p className="font-semibold sm:text-xl capitalize">
@@ -453,7 +453,7 @@ function PinDetail() {
                       <Link href={`${url}/profile/${comment?.posted_by._id}`}
                       className="flex bg-white border-2 border-gray-900 p-0.5 items-center justify-center w-10 h-10 relative rounded-full">
                           <div className="relative w-full h-full overflow-hidden rounded-full">
-                              <Image src={`/api/imageproxy?url=${encodeURIComponent(comment?.posted_by?.image_url)}`} alt="my-profile" layout="fill" objectFit="cover" />
+                              <Image src={`/api/imageproxy?url=${encodeURIComponent(comment?.posted_by?.image_url)}`} alt={`${comment?.posted_by?.username} profile`} layout="fill" objectFit="cover" />
                           </div>
                       </Link>
                       <div className="flex flex-col w-[85%]">

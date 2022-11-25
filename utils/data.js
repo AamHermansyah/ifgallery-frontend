@@ -217,6 +217,7 @@ export const subjectDetailQuery = (id) => {
     semester,
     _id,
     meetings[]{
+      create_at,
       _key,
       topic,
       meeting,

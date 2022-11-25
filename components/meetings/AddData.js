@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import { client } from "../../client";
 import { v4 as uuidv4 } from "uuid"
+import { getDateWithDayName, getHoursAndMinutes } from "../../utils/formatDate";
 
 const AddData = ({isSubject, user, id, currentData}) => {
     const [adding, setAdding] = useState(false);
@@ -56,6 +57,7 @@ const AddData = ({isSubject, user, id, currentData}) => {
                 _key: uuidv4(),
                 meeting,
                 topic,
+                create_at: `${getHoursAndMinutes(new Date())} ${getDateWithDayName(new Date)}`,
                 posted_by: {
                     _type: 'posted_by',
                     _ref: user.userId
@@ -93,6 +95,7 @@ const AddData = ({isSubject, user, id, currentData}) => {
                     <div className="flex items-center gap-2 mt-[8px]">
                         <p className="w-max text-sky-500 text-md font-bold">Semester</p>
                         <input
+                        autoComplete={false}
                         ref={semesterRef}
                         type="text"
                         name="semester"
@@ -105,21 +108,23 @@ const AddData = ({isSubject, user, id, currentData}) => {
                 <div className="flex gap-2 items-center -mt-1">
                     {!isSubject && <p className="text-xl font-bold text-gray-800 capitalize leading-3">Pertemuan ke </p>}
                     <input
+                    autoComplete={false}
                     ref={subjectOrMeetingRef}
                     type={isSubject ? 'text' : 'number'}
                     name={isSubject ? 'subject' : 'meeting'}
                     id={isSubject ? 'subject' : 'meeting'}
                     placeholder={isSubject ? 'Mata kuliah' : '0'}
-                    className={`${isSubject ? 'w-full' : 'w-[60px]'} text-xl font-bold text-gray-800 capitalize outline-none`}
+                    className={`${isSubject ? 'w-full' : 'w-[60px]'} text-xl font-bold text-gray-800 capitalize outline-none z-[1]`}
                     />
                 </div>
                 <input
+                autoComplete={false}
                 ref={timetableOrTopicRef}
                 type="text"
                 name={isSubject ? 'timetable' : 'topic'}
                 id={isSubject ? 'timetable' : 'topic'}
                 placeholder={isSubject ? 'Jadwal masuk (Ex. Senin 09:45)' : 'Topik materi'}
-                className={`${isSubject ? 'relative -top-[4px] font-bold' : ''} h-[30px] w-full text-sm outline-none`}
+                className={`${isSubject ? 'relative -top-[4px] font-bold' : ''} h-[30px] pt-2 -mt-3 w-full text-sm outline-none`}
                 />
             </div>
             <div className="flex justify-between gap-4 w-full">
