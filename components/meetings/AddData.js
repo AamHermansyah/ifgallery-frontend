@@ -106,7 +106,7 @@ const AddData = ({isSubject, user, id, currentData}) => {
                     </div>
                 )}
                 <div className="flex gap-2 items-center -mt-1">
-                    {!isSubject && <p className="text-xl font-bold text-gray-800 capitalize leading-3">Pertemuan ke </p>}
+                    {!isSubject && <p className="text-xl font-bold text-gray-800 capitalize leading-3 z-[1]">Pertemuan ke </p>}
                     <input
                     autoComplete={false}
                     ref={subjectOrMeetingRef}
