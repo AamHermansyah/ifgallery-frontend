@@ -145,7 +145,7 @@ const Card = ({data, isSubject, isAdmin, currentData, user, id}) => {
     }
 
     return (
-        <div className="relative w-full max-w-[500px] sm:max-w-[350px] h-max bg-white rounded-lg sm:rounded-xl shadow-sm">
+        <div className="relative w-full max-w-[500px] sm:max-w-[350px] bg-white rounded-lg sm:rounded-xl shadow-sm">
 
             {data?.create_at && (
                 <div className="absolute top-0 right-0 px-2 py-1 text-sm text-gray-700">
@@ -179,7 +179,7 @@ const Card = ({data, isSubject, isAdmin, currentData, user, id}) => {
 
             {displayEdit && (
                 <div className={`${isValidInput ? 'border-white' : 'border-red-500'} border-2 absolute inset-0 flex flex-col justify-between p-6 bg-white rounded-lg sm:rounded-xl`}>
-                    <div className={!isSubject ? '-mt-1' : '-mt-2'}>
+                    <div className={!isSubject ? '-mt-1' : '-mt-3'}>
                         {isSubject && (
                             <div className="flex items-center gap-2 mt-[8px]">
                                 <p className="w-max text-sky-500 text-md font-bold">Semester</p>
@@ -196,7 +196,7 @@ const Card = ({data, isSubject, isAdmin, currentData, user, id}) => {
                             </div>
                         )}
                         <div className="flex gap-2 items-center -mt-1">
-                            {!isSubject && <p className="text-xl font-bold text-gray-800 capitalize leading-3 z-[1]">Pertemuan ke </p>}
+                            {!isSubject && <p className="text-xl font-bold text-gray-800 capitalize leading-3">Pertemuan ke </p>}
                             <input
                             autoComplete={false}
                             onChange={e => setSubjectOrMeeting(e.target.value)}
@@ -205,7 +205,7 @@ const Card = ({data, isSubject, isAdmin, currentData, user, id}) => {
                             name={isSubject ? 'subject' : 'meeting'}
                             id={isSubject ? 'subject' : 'meeting'}
                             placeholder={isSubject ? 'Mata kuliah' : '0'}
-                            className={`${isSubject ? 'w-full' : 'w-[60px]'} text-xl font-bold text-gray-800 capitalize outline-none z-[1]`}
+                            className={`${isSubject ? 'w-full' : 'w-[60px]'} text-xl font-bold text-gray-800 capitalize outline-none`}
                             />
                         </div>
                         <input
@@ -216,7 +216,7 @@ const Card = ({data, isSubject, isAdmin, currentData, user, id}) => {
                         name={isSubject ? 'timetable' : 'topic'}
                         id={isSubject ? 'timetable' : 'topic'}
                         placeholder={isSubject ? 'Jadwal masuk (Ex. Senin 09:45)' : 'Topik materi'}
-                        className={`${isSubject ? 'relative -top-[4px] font-bold' : ''} h-[30px] pt-2 -mt-3 w-full text-sm outline-none`}
+                        className={`w-full text-gray-700 outline-none text-sm`}
                         />
                     </div>
                     <div className="flex justify-between gap-4 w-full">
@@ -256,7 +256,7 @@ const Card = ({data, isSubject, isAdmin, currentData, user, id}) => {
                     {isSubject ? `${data.subject}` : `Pertemuan ke ${data.meeting}`}
                 </p>
 
-                <p className={`${isSubject ? 'font-bold' : ''} h-[30px] pt-2 text-sm text-gray-700`}>
+                <p className={`${isSubject ? 'mt-3' : 'mt-2'} text-gray-700 text-sm leading-4`}>
                     {isSubject ? data.timetable : data.topic}
                 </p>
 
