@@ -196,7 +196,7 @@ const Card = ({data, isSubject, isAdmin, currentData, user, id}) => {
                             </div>
                         )}
                         <div className="flex gap-2 items-center -mt-1">
-                            {!isSubject && <p className="text-xl font-bold text-gray-800 capitalize leading-3">Pertemuan ke </p>}
+                            {!isSubject && <p className="text-xl font-bold text-gray-800 capitalize leading-3 z-[1]">Pertemuan ke </p>}
                             <input
                             autoComplete={false}
                             onChange={e => setSubjectOrMeeting(e.target.value)}
@@ -205,7 +205,7 @@ const Card = ({data, isSubject, isAdmin, currentData, user, id}) => {
                             name={isSubject ? 'subject' : 'meeting'}
                             id={isSubject ? 'subject' : 'meeting'}
                             placeholder={isSubject ? 'Mata kuliah' : '0'}
-                            className={`${isSubject ? 'w-full' : 'w-[60px]'} text-xl font-bold text-gray-800 capitalize outline-none`}
+                            className={`${isSubject ? 'w-full' : 'w-[60px]'} text-xl font-bold text-gray-800 capitalize outline-none z-[1]`}
                             />
                         </div>
                         <input
