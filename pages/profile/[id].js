@@ -36,7 +36,7 @@ function Profile() {
 
   const handleSignOut = () => {
     signOut({
-      callbackUrl: window.location.origin
+      callbackUrl: window.location.origin + '/login'
     });
   }
 
