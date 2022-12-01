@@ -55,6 +55,12 @@ function MemberListPage() {
                         ))}
 
                         {member && member
+                        .filter(user => user.organization_field === 'Admin')
+                        .map((user) => (
+                            <CardMemberList user={user} key={user._id} />
+                        ))}
+
+                        {member && member
                         .filter(user => user.organization_field === 'Ketua Kelas')
                         .map((user) => (
                             <CardMemberList user={user} key={user._id} />
@@ -91,16 +97,7 @@ function MemberListPage() {
                         ))}
 
                         {member && member
-                        .filter(user => {
-                            const { organization_field: field } = user;
-                            const otherFilterUser = 
-                                field !== 'Maker' && field !== 'Ketua Kelas' && 
-                                field !== 'Wakil Ketua Kelas' && field !== "Sekertaris" &&
-                                field !== 'Wakil Sekertaris' && field !== "Bendahara" &&
-                                field !== "Wakil Bendahara";
-
-                            return otherFilterUser;
-                        })
+                        .filter(user => user?.organization_field === "Anggota" || !user?.organization_field)
                         .map((user) => (
                             <CardMemberList user={user} key={user._id} />
                         ))}
