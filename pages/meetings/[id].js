@@ -53,7 +53,8 @@ function MeetingsPage() {
         client.fetch(dataId, { signal })
         .then(res => {
             if(res[0]){
-                setData(res[0]);
+                const sortData = res[0].sort((current, next) => +current.meeting - +next.meeting)
+                setData(sortData);
                 setLoading(false);
             } else router.push('/');
         })
